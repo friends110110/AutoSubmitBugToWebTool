@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -17,8 +16,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.xmlbeans.impl.piccolo.io.FileFormatException;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Func1;
-
+/**
+ * excel 2003  2007  is compatible
+ * @author Administrator
+ *
+ */
 public class FileUtil2 {
 	 private static final String EXTENSION_XLS = "xls";
 	 private static final String EXTENSION_XLSX = "xlsx";
@@ -29,136 +33,70 @@ public class FileUtil2 {
 	     * @throws FileNotFoundException
 	     * @throws FileFormatException
 	     */
-	    public ArrayList<FieldBean> parseFileToMap(String filePath) throws FileNotFoundException, FileFormatException {
-			ArrayList<FieldBean> beanLists=new  ArrayList<FieldBean> ();
-	        // 检查
-	        this.preReadCheck(filePath);
+	    public FieldSets parseFileToMap(String filePath)  {
+			final FieldSets fieldSet=new FieldSets();
 	        // 获取workbook对象
 	        Workbook workbook = null;
-	        try {
-	            workbook = this.getWorkbook(filePath);
-	            
-	            
-	            
-	            // 读文件 一个sheet一个sheet地读取
-	                Sheet sheet = workbook.getSheetAt(0);
-	                if (sheet == null) {
-	                    return null;
-	                }
-	                System.out.println("=======================" + sheet.getSheetName() + "=========================");
-	               
+			try{
+	    	// 检查
+	        this.preReadCheck(filePath);
+	       
+            workbook = this.getWorkbook(filePath);
+            // 读文件 一个sheet一个sheet地读取
+            final Sheet sheet = workbook.getSheetAt(0);
+            if (sheet == null) {
+                return null;
+            }
+            System.out.println("=======================" + sheet.getSheetName() + "=========================");
 
-	                int firstRowIndex = sheet.getFirstRowNum();
-	                int lastRowIndex = sheet.getLastRowNum();
-
-	                //Observable.from(sheet).flatMap(new Func1<>)
+            for(int i=sheet.getFirstRowNum();i<sheet.getPhysicalNumberOfRows();i++){
+            	Row row=sheet.getRow(i);
+            	String cellValue;
+            	ArrayList<String> list=new ArrayList<String>();
+            	for(int j= row.getFirstCellNum();j<row.getPhysicalNumberOfCells();j++){
+            		cellValue=row.getCell(j).toString();
+            		list.add(cellValue);
+            		System.out.print(cellValue+"\t");
+            	}
+            	if(0==i){
+            		fieldSet.titleList=list;
+            	}else{
+            		fieldSet.contentList.add(list);
+            	}
+        		System.out.println();
+            }
 	                
-	                // 读取首行 即,表头
-	                Row firstRow = sheet.getRow(firstRowIndex);
-	                for (int i = firstRow.getFirstCellNum(); i <= firstRow.getLastCellNum(); i++) {
-	                    Cell cell = firstRow.getCell(i);
-	                    String cellValue = this.getCellValue(cell, true);
-	                    System.out.print(" " + cellValue + "\t");
-	                }
-	                System.out.println("");
-
-	                // 读取数据行
-	                for (int rowIndex = firstRowIndex + 1; rowIndex <= lastRowIndex; rowIndex++) {
-	                    Row currentRow = sheet.getRow(rowIndex);// 当前行
-	                    int firstColumnIndex = currentRow.getFirstCellNum(); // 首列
-	                    int lastColumnIndex = currentRow.getLastCellNum();// 最后一列
-	                    for (int columnIndex = firstColumnIndex; columnIndex <= lastColumnIndex; columnIndex++) {
-	                        Cell currentCell = currentRow.getCell(columnIndex);// 当前单元格
-	                        String currentCellValue = this.getCellValue(currentCell, true);// 当前单元格的值
-	                        System.out.print(currentCellValue + "\t");
-	                    }
-	                    System.out.println("");
-	                }
-	                System.out.println("======================================================");
-	            
+	                
+	                Observable.from(sheet).map(new Func1<Row,Void>(){
+						@Override
+						public Void call(Row row) {
+							final ArrayList<String> list=new ArrayList<String>();
+					    	Observable.from(row).map(new Func1<Cell,Void>(){
+								@Override
+								public Void call(Cell cell) {
+									list.add(cell.getStringCellValue());
+									System.out.println(cell.getStringCellValue()+"\t");
+									return null;
+								}
+							});
+							System.out.println();
+							if(row==sheet.getRow(0)){
+								fieldSet.titleList=list;
+							}else {
+								fieldSet.contentList.add(list);
+							}
+							return null;
+						}
+	                });
+	         System.out.println("==============================================================================");
+	          workbook.close();
 	        } catch (Exception e) {
 	            e.printStackTrace();
-	        } finally {
-	            if (workbook != null) {
-	                try {
-	                    workbook.close();
-	                } catch (IOException e) {
-	                    e.printStackTrace();
-	                }
-	            }
 	        }
-	        
-	        return beanLists;
+	        return fieldSet;
 	    }
 	 
-	 
-//	    /**
-//	     * 读取excel文件内容
-//	     * @param filePath
-//	     * @throws FileNotFoundException
-//	     * @throws FileFormatException
-//	     */
-//	    public ArrayList<FieldBean> parseFileToMap(String filePath) throws FileNotFoundException, FileFormatException {
-//	    	
-//			ArrayList<FieldBean> beanLists=new  ArrayList<FieldBean> ();
-//			  
-//				
-//	        // 检查
-//	        this.preReadCheck(filePath);
-//	        // 获取workbook对象
-//	        Workbook workbook = null;
-//
-//	        try {
-//	            workbook = this.getWorkbook(filePath);
-//	            // 读文件 一个sheet一个sheet地读取
-//	                Sheet sheet = workbook.getSheetAt(0);
-//	                if (sheet == null) {
-//	                    return null;
-//	                }
-//	                System.out.println("=======================" + sheet.getSheetName() + "=========================");
-//
-//	                int firstRowIndex = sheet.getFirstRowNum();
-//	                int lastRowIndex = sheet.getLastRowNum();
-//
-//	                // 读取首行 即,表头
-//	                Row firstRow = sheet.getRow(firstRowIndex);
-//	                for (int i = firstRow.getFirstCellNum(); i <= firstRow.getLastCellNum(); i++) {
-//	                    Cell cell = firstRow.getCell(i);
-//	                    String cellValue = this.getCellValue(cell, true);
-//	                    System.out.print(" " + cellValue + "\t");
-//	                }
-//	                System.out.println("");
-//
-//	                // 读取数据行
-//	                for (int rowIndex = firstRowIndex + 1; rowIndex <= lastRowIndex; rowIndex++) {
-//	                    Row currentRow = sheet.getRow(rowIndex);// 当前行
-//	                    int firstColumnIndex = currentRow.getFirstCellNum(); // 首列
-//	                    int lastColumnIndex = currentRow.getLastCellNum();// 最后一列
-//	                    for (int columnIndex = firstColumnIndex; columnIndex <= lastColumnIndex; columnIndex++) {
-//	                        Cell currentCell = currentRow.getCell(columnIndex);// 当前单元格
-//	                        String currentCellValue = this.getCellValue(currentCell, true);// 当前单元格的值
-//	                        System.out.print(currentCellValue + "\t");
-//	                    }
-//	                    System.out.println("");
-//	                }
-//	                System.out.println("======================================================");
-//	            
-//	        } catch (Exception e) {
-//	            e.printStackTrace();
-//	        } finally {
-//	            if (workbook != null) {
-//	                try {
-//	                    workbook.close();
-//	                } catch (IOException e) {
-//	                    e.printStackTrace();
-//	                }
-//	            }
-//	        }
-//	        
-//	        return beanLists;
-//	    }
-//	 
-	 
+
 	  /***
 	     * <pre>
 	     * 取得Workbook对象(xls和xlsx对象不同,不过都是Workbook的实现类)
@@ -201,34 +139,5 @@ public class FileUtil2 {
 	            throw new FileFormatException("传入的文件不是excel");
 	        }
 	    }
-
-
-
-	    /**
-	     * 取单元格的值
-	     * @param cell 单元格对象
-	     * @param treatAsStr 为true时，当做文本来取值 (取到的是文本，不会把“1”取成“1.0”)
-	     * @return
-	     */
-	    private String getCellValue(Cell cell, boolean treatAsStr) {
-	        if (cell == null) {
-	            return "";
-	        }
-
-	        if (treatAsStr) {
-	            // 虽然excel中设置的都是文本，但是数字文本还被读错，如“1”取成“1.0”
-	            // 加上下面这句，临时把它当做文本来读取
-	            cell.setCellType(Cell.CELL_TYPE_STRING);
-	        }
-
-	        if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
-	            return String.valueOf(cell.getBooleanCellValue());
-	        } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-	            return String.valueOf(cell.getNumericCellValue());
-	        } else {
-	            return String.valueOf(cell.getStringCellValue());
-	        }
-	    }
-
 
 }

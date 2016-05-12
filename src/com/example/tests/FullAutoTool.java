@@ -2,6 +2,7 @@ package com.example.tests;
 
 import java.util.regex.Pattern;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -33,9 +34,14 @@ public class FullAutoTool {
     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
   }
 
-
+  public void callProgram(ArrayList<String> list) throws Exception{
+	  if(list.size()<0){
+		  throw new Exception("数据数太少 明显不对");
+	  }
+	  callProgram(list.get(0),list.get(1),list.get(2));
+  }
   //solve one problem 
-  private void callProgram(String problemId,String solution,String comment){
+  public void callProgram(String problemId,String solution,String comment){
 	    driver.get(baseUrl + "/dm/browse/HSTZYJF-"+problemId);
 	    driver.findElement(By.id("action_id_721")).click();
 	    driver.findElement(By.id("分配任务")).click();

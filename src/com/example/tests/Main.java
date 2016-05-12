@@ -11,14 +11,16 @@ public class Main {
 		//FileUtils fileUtils=new FileUtils();
 		//ArrayList<FieldBean> beanList=fileUtils.parseFileToMap("e:\\11.xls");
 		FileUtil2 fileUtils2=new FileUtil2(); 
-		beanList=fileUtils2.parseFileToMap("e:\\22.xlsx");
+		FieldSets fieldSet=fileUtils2.parseFileToMap("e:\\22.xlsx");
 		
 		
 		
 		FullAutoTool tool=new FullAutoTool();
 		String firefoxPath="D:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe";
 		tool.setUp(firefoxPath);
-		
+		for(int i=0;i<fieldSet.contentList.size();i++){
+			tool.callProgram(fieldSet.contentList.get(i));
+		}
 	}
 
 }
