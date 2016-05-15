@@ -1,5 +1,5 @@
-package com.example.tests;
-
+package com.example.tests.bean;
+@Deprecated
 public class FieldBean {
 
 	String problemId;

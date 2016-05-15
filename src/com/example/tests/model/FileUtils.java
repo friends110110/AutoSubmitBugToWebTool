@@ -1,4 +1,4 @@
-package com.example.tests;
+package com.example.tests.model;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.example.tests.bean.FieldBean;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -26,6 +27,7 @@ import jxl.write.Label;
  * @author Administrator
  *
  */
+@Deprecated
 public class FileUtils {
 	  jxl.Workbook readwb = null;   
 	  jxl.write.WritableWorkbook wwb=null;
