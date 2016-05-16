@@ -12,6 +12,10 @@ public class FieldServiceImpl {
 		createExcelformUrlModel=new CreateExcelformUrlModel();
 		commitExcelToUrlModel=new CommitDataSetToUrlModel();
 	}
+	
+    public boolean initWebSiteConfiguration(String params)throws Exception{
+    	return createExcelformUrlModel.initWebSiteConfiguration(params);
+    }
 	/**
 	 * 
 	 * @param url
@@ -19,18 +23,18 @@ public class FieldServiceImpl {
 	 */
 	public boolean createExcelFromUrl(String url){
 		 FieldSets fieldSets=createExcelformUrlModel.getDataFromUrl(url);
-		 return createExcelformUrlModel.createExcel(ConstantValue.backupFilePath, fieldSets);
+		 return createExcelformUrlModel.createExcel(ConstantValue.BACKUP_FILE_PATH, fieldSets);
 	}
 	
 	public FieldSets parseExcelToDataSet(){
-		return createExcelformUrlModel.parseExcelToDataSets(ConstantValue.backupFilePath);
+		return createExcelformUrlModel.parseExcelToDataSets(ConstantValue.BACKUP_FILE_PATH);
 	}
 	
 	public void commitDataSetToUrl(FieldSets fieldSet) throws Exception{
 		commitExcelToUrlModel.callProgram(fieldSet);
 		
 	}
-	public void removeCells(FieldSets fieldSets,int... cells){
+	public void removeCells(FieldSets fieldSets,Integer... cells){
 		createExcelformUrlModel.removeCells(fieldSets, cells);
 	}
 	

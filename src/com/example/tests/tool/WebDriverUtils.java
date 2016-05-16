@@ -20,7 +20,7 @@ public class WebDriverUtils {
 	 */
 	public static WebDriver getWebDriver(){
 		if(null==driver){
-			 File pathBinary = new File(ConstantValue.firefoxPath);
+			 File pathBinary = new File(ConstantValue.FIREEFOX_PATH);
 			 FirefoxBinary Binary = new FirefoxBinary(pathBinary);
 			 FirefoxProfile firefoxPro = new FirefoxProfile();   
 			 driver = new FirefoxDriver(Binary,firefoxPro);  

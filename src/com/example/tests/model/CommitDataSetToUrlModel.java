@@ -18,6 +18,9 @@ import org.openqa.selenium.support.ui.Select;
 import com.example.tests.bean.FieldSets;
 import com.example.tests.tool.WebDriverUtils;
 
+import rx.Observable;
+import rx.functions.Action1;
+
 public class CommitDataSetToUrlModel {
   private WebDriver driver;
   private boolean acceptNextAlert = true;
@@ -31,16 +34,26 @@ public class CommitDataSetToUrlModel {
 
   }
   
-  public void callProgram(FieldSets fieldSet) throws Exception{
+  public void callProgram(FieldSets fieldSet) throws Exception {
 	  ArrayList<ArrayList<String>> contentLists=fieldSet.contentList;
 	  if(contentLists.size()<=0){
 		  throw new Exception("数据数太少 明显不对");
 	  } 
-	  for(int i=0;i<contentLists.size();i++){
-		  ArrayList<String> list=contentLists.get(i);
-		  callProgram(list);
-	  }
-	  WebDriverUtils.closeWebDriver();
+	  Observable.from(contentLists).subscribe(new Action1<ArrayList<String>>() {
+		@Override
+		public void call(ArrayList<String> list) {
+			try {
+				callProgram(list);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	});
+//	  for(int i=0;i<contentLists.size();i++){
+//		  ArrayList<String> list=contentLists.get(i);
+//		  callProgram(list);
+//	  }
+//	  WebDriverUtils.closeWebDriver();
   }
   public void callProgram(ArrayList<String> list)throws Exception{
 	  if(list.size()<4){

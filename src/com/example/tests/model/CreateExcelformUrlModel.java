@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,6 +41,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 
 import com.example.tests.bean.FieldSets;
+import com.example.tests.configuration.ConfigParams;
 import com.example.tests.tool.ConstantValue;
 import com.example.tests.tool.WebDriverUtils;
 
@@ -56,8 +59,53 @@ import rx.schedulers.Schedulers;
 public class CreateExcelformUrlModel {
 	 private static final String EXTENSION_XLS = "xls";
 	 private static final String EXTENSION_XLSX = "xlsx";
-	 
+     XSSFRow row =null;
+	 ConfigParams paramsMap=ConfigParams.getInstance();
 
+	/**
+	 * 
+	 * @param param  the value is "n" or a legal website
+	 * @return true for success, false for failure
+	 */
+     public boolean initWebSiteConfiguration(String param) {
+    	 boolean isUrl=param.matches("(http|ftp|https):\\/\\/([\\w.]+\\/?)\\S*");
+    	 if(!"n".equalsIgnoreCase(param)&&!isUrl){
+    		 System.out.println("the website you typed in has mistakes,type in again");
+    		 return false;
+    	 }
+    	 try{
+    		 Properties properties=new  Properties();
+    		 File file=new File(ConstantValue.CONFIGURATION_FILE_PATH);
+    		 FileInputStream in = null;
+	    	 if("n".equals(param)){
+	    		 if(!file.exists()){
+	    			 return false;
+	    		 }
+				 in = new FileInputStream(ConstantValue.CONFIGURATION_FILE_PATH);
+	    		 properties.load(in);
+	    		 in.close();
+	    		 paramsMap.setValue(ConstantValue.KEY_WEBSITE, properties.getProperty(ConstantValue.KEY_WEBSITE));
+			 }else{
+				 if(!file.exists()){
+	    			 file.createNewFile();
+	    		 }
+				 in = new FileInputStream(ConstantValue.CONFIGURATION_FILE_PATH);
+	    		 properties.load(in);
+	    		 in.close();
+	    		 paramsMap.setValue(ConstantValue.KEY_WEBSITE, param);
+				 properties.setProperty(ConstantValue.KEY_WEBSITE,param);
+				 FileOutputStream writeFile = new FileOutputStream(file);
+				 properties.store(writeFile, "website =' url you type in'");
+				 writeFile.close();
+			 }
+	    	 
+    	 }catch(Exception e){
+				System.out.println("file is non-existence or the website key is non-existence,"
+						+ "	please type in the website again");
+    		 return false;
+    	 }
+    	 return true;
+     }
 	 /**
 	  * 根据url地址生成 xlsx表格，
 	  * problemId	description result	solution	comment
@@ -67,22 +115,36 @@ public class CreateExcelformUrlModel {
 	 public FieldSets getDataFromUrl(String url){
 		 FieldSets fieldSets=new FieldSets();
 		 WebDriver webDriver=WebDriverUtils.getWebDriver();
-	     webDriver.get(ConstantValue.createExcelURL);
+	     webDriver.get(url);
 	     WebElement webElement=webDriver.findElement(By.xpath("//td[@class='nav summary']"));
-	     List<WebElement> webElementList = webDriver.findElements(By.xpath(("//td[@class='nav summary']/a")));  
-	     ArrayList<ArrayList<String>> contentList=new ArrayList<ArrayList<String>>();
-	     ArrayList<String> list;
-	     for(int i=0;i<webElementList.size();i++){
-	    	 list=new ArrayList<String>();
-	    	 webElement=webElementList.get(i);
-	    	 String probleId=webElement.getAttribute("href");
-	    	 String description=webElement.getText();
-	    	 list.add(probleId);
-	    	 list.add(description);
-	    	 System.out.print(probleId+"\t"+description);
-	    	 System.out.println();
-	    	 contentList.add(list);
-	     }
+	     List<WebElement> webElementLists = webDriver.findElements(By.xpath(("//td[@class='nav summary']/a")));  
+	     final ArrayList<ArrayList<String>> contentList=new ArrayList<ArrayList<String>>();
+	     Observable.from(webElementLists).subscribe(new Action1<WebElement>(){
+			@Override
+			public void call(WebElement element) {
+			     ArrayList<String> list=new ArrayList<String>();
+				 String probleId=element.getAttribute("href");
+		    	 String description=element.getText();
+		    	 list.add(probleId);
+		    	 list.add(description);
+		    	 System.out.print(probleId+"\t"+description);
+		    	 System.out.println();
+		    	 contentList.add(list);
+			}
+	     });
+	     
+//	     ArrayList<String> list=new ArrayList<String>();
+//	     for(int i=0;i<webElementLists.size();i++){
+//	    	 list=new ArrayList<String>();
+//	    	 webElement=webElementLists.get(i);
+//	    	 String probleId=webElement.getAttribute("href");
+//	    	 String description=webElement.getText();
+//	    	 list.add(probleId);
+//	    	 list.add(description);
+//	    	 System.out.print(probleId+"\t"+description);
+//	    	 System.out.println();
+//	    	 contentList.add(list);
+//	     }
 	     fieldSets.contentList=contentList;
 	     return fieldSets;
 	     
@@ -94,15 +156,15 @@ public class CreateExcelformUrlModel {
 	  * @return	true for success,false for failure
 	  */
 	 public boolean createExcel(String createPath,FieldSets fieldSets) {
-		ArrayList<ArrayList<String>> dataList =fieldSets.contentList;
-		ArrayList<String> titleList=fieldSets.titleList;
+		final ArrayList<ArrayList<String>> dataList =fieldSets.contentList;
+		final ArrayList<String> titleList=fieldSets.titleList;
 		// TODO Auto-generated method stub
 		// HSSFWorkbook workBook = new HSSFWorkbook();// 创建 一个excel文档对象  
 		try{
 	        XSSFWorkbook workBook = new XSSFWorkbook();  
-	        XSSFSheet sheet = workBook.createSheet();// 创建一个工作薄对象  
+	        final XSSFSheet sheet = workBook.createSheet();// 创建一个工作薄对象  
 	        sheet.setColumnWidth(1, 10000);// 设置第二列的宽度为  
-	        XSSFCellStyle style = workBook.createCellStyle();// 创建样式对象  
+	        final XSSFCellStyle style = workBook.createCellStyle();// 创建样式对象  
 	        // 设置字体  
 	        XSSFFont font = workBook.createFont();// 创建字体对象  
 	        font.setFontHeightInPoints((short) 15);// 设置字体大小  
@@ -120,35 +182,56 @@ public class CreateExcelformUrlModel {
 	        style.setBorderRight(HSSFCellStyle.BORDER_MEDIUM);// 右边边框  
 	        // 格式化日期  
 	        style.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy h:mm"));  
-	//		Workbook workBook=this.getWorkbook(createPath);
-		       for(int i=0;i<dataList.size();i++) {
-		    	   ArrayList<String> rowList;
-		    	   if(i==0){	//title
-		    		   rowList=titleList;
-		    	   }else{	//data from 0
-		    		   rowList=dataList.get(i-1);
-		    	   }
-		    	   XSSFRow row = sheet.createRow(i);
-		    	   row.setHeightInPoints(23);// 设置行高23像素  
-		    	   for(int j=0;j<rowList.size();j++){
-		    	        XSSFCell cell = row.createCell(j);// 创建单元格  
-		    	        cell.setCellValue(rowList.get(j));// 写入当前日期  
-		    	        cell.setCellStyle(style);
-	//		           XSSFCell cell = row2.createCell(i);
-	//		           xssfValue = new XSSFRichTextString(entry.get(i));
-	//		           cell.setCellValue(xssfValue);
-		           }
-		       }
-	//        XSSFRow row = sheet.createRow(1);// 创建一个行对象  
-	//        row.setHeightInPoints(23);// 设置行高23像素  
-	//        XSSFCell cell = row.createCell(1);// 创建单元格  
-	//        cell.setCellValue(new Date());// 写入当前日期  
-	//        cell.setCellStyle(style);// 应用样式对象  
+	        Observable.create(new OnSubscribe< ArrayList<String>>(){
+				@Override
+				public void call(final Subscriber<? super ArrayList<String>> rowSubscribe) {
+					//row count is equal to titleList plus dataList
+					Observable.range(0, 1+dataList.size()).subscribe(new Action1<Integer>() {
+						@Override
+						public void call(Integer rowIndex) {
+					    	row = sheet.createRow(rowIndex);
+					    	row.setHeightInPoints(23);// 设置行高23像素  
+							if(0==rowIndex){
+								rowSubscribe.onNext(titleList);
+							}else{
+								rowSubscribe.onNext(dataList.get(rowIndex-1));
+							}
+						}
+					});
+				}
+	        }).subscribe(new Action1<ArrayList<String>>() {
+				@Override
+				public void call(final ArrayList<String> list) {
+					Observable.range(0,list.size()).subscribe(new Action1<Integer>() {
+						@Override
+						public void call(Integer index) {
+							XSSFCell cell = row.createCell(index);// 创建单元格  
+			    	        cell.setCellValue(list.get(index));// 写入当前日期  
+			    	        cell.setCellStyle(style);
+						}
+					});
+				}
+			});
+//		       for(int i=0;i<dataList.size();i++) {
+//		    	   ArrayList<String> rowList;
+//		    	   if(i==0){	//title
+//		    		   rowList=titleList;
+//		    	   }else{	//data from 0
+//		    		   rowList=dataList.get(i-1);
+//		    	   }
+//		    	   XSSFRow row = sheet.createRow(i);
+//		    	   row.setHeightInPoints(23);// 设置行高23像素  
+//		    	   for(int j=0;j<rowList.size();j++){
+//		    	        XSSFCell cell = row.createCell(j);// 创建单元格  
+//		    	        cell.setCellValue(rowList.get(j));// 写入当前日期  
+//		    	        cell.setCellStyle(style);
+//		           }
+//		       }
 	        // 文件输出流  
 	        FileOutputStream os = new FileOutputStream(createPath);  
 	        workBook.write(os);// 将文档对象写入文件输出流  
-		       os.close();// 关闭文件输出流  
-		       System.out.println("创建成功 office 2007 excel");  
+		    os.close();// 关闭文件输出流  
+		    System.out.println("创建成功 office 2007 excel");  
 		}catch(Exception e){
 			e.printStackTrace();
 			return false;
@@ -179,45 +262,74 @@ public class CreateExcelformUrlModel {
             
             Observable.create(new OnSubscribe<Row>(){
 				@Override
-				public void call(Subscriber<? super Row> subscriber) {
-					// TODO Auto-generated method stub
-					for(int i=0;i<sheet.getPhysicalNumberOfRows();i++){
-						subscriber.onNext(sheet.getRow(i));
-						System.out.println();
-					}
-				}}).observeOn(Schedulers.immediate()).subscribe(new Subscriber<Row>() {
+				public void call(final Subscriber<? super Row> subscriber) {
+					Observable.range(0, sheet.getPhysicalNumberOfRows())
+							  .subscribe(new Action1<Integer>(){
+									@Override
+									public void call(Integer rowIndex) {
+										Row row=sheet.getRow(rowIndex);
+										//ensure the first cell which attach to the specified row is not empty
+										if(row.getCell(0)!=null){
+											subscriber.onNext(row);
+											System.out.println();
+										}
+									}
+								});
+//					for(int i=0;i<sheet.getPhysicalNumberOfRows();i++){
+//						subscriber.onNext(sheet.getRow(i));
+//						System.out.println();
+//					}
+				}}).observeOn(Schedulers.immediate())
+            	   .subscribe(new Subscriber<Row>() {
 					@Override
 					public void onCompleted() {
-						// TODO Auto-generated method stub
 						System.out.println("everything seems to be ok");
 					}
 					@Override
 					public void onError(Throwable e) {
-						// TODO Auto-generated method stub
 						System.out.println("something seems to be wrong");
 						e.printStackTrace();
 					}
 					@Override
-					public void onNext(Row row) {
-						// TODO Auto-generated method stub
-						ArrayList<String> list=new ArrayList<String>();
+					public void onNext(final Row row) {
+						final ArrayList<String> list=new ArrayList<String>();
 						int cellNumber=fieldSet.titleList.size();
 						cellNumber=cellNumber<row.getPhysicalNumberOfCells()?row.getPhysicalNumberOfCells():cellNumber;
-						for(int j=0;j<cellNumber;j++){
-							Cell cell=row.getCell(j);
-							if(null==cell){
-								//第一列为null的整行都是无效
-								if(j==0){
-									return;
+						
+						Observable.range(0, cellNumber)
+						.map(new Func1<Integer, String>() {
+							@Override
+							public String call(Integer cellIndex) {
+								Cell cell=row.getCell(cellIndex);
+								if(cell==null){
+				            		System.out.print("nullvalue\t");
+									return "";
+								}else{
+				            		System.out.print(cell.toString().trim()+"\t");
+									return cell.toString().trim();
 								}
-								list.add("");
-			            		System.out.print("nullvalue"+"\t");
-			            		continue;
 							}
-							String cellValue=cell.toString();
-		            		list.add(cellValue.trim());
-		            		System.out.print(cellValue+"\t");
-						}
+						}).subscribe(new Action1<String>() {
+							@Override
+							public void call(String value) {
+								list.add(value);
+							}
+						});
+//						for(int j=0;j<cellNumber;j++){
+//							Cell cell=row.getCell(j);
+//							if(null==cell){
+//								//第一列为null的整行都是无效
+//								if(j==0){
+//									return;
+//								}
+//								list.add("");
+//			            		System.out.print("nullvalue"+"\t");
+//			            		continue;
+//							}
+//							String cellValue=cell.toString();
+//		            		list.add(cellValue.trim());
+//		            		System.out.print(cellValue+"\t");
+//						}
 		            	if(row==sheet.getRow(0)){
 		            		fieldSet.titleList=list;
 		            	}else{
@@ -225,7 +337,7 @@ public class CreateExcelformUrlModel {
 		            	}
 					}
 				});
-	         System.out.println("==============================================================================");
+	          System.out.println("==============================================================================");
 	          workbook.close();
 	        } catch (Exception e) {
 	            e.printStackTrace();
@@ -233,19 +345,33 @@ public class CreateExcelformUrlModel {
 	        return fieldSet;
 	    }
 	 
-	public void removeCells(final FieldSets fieldSets,int... cells){
+	public void removeCells( final FieldSets fieldSets,Integer... cells){
 		ArrayList<String> titleList=fieldSets.titleList;
-		for(int j=0;j<cells.length;j++){
-			titleList.remove(cells[j]);
-		}
-
-		ArrayList<ArrayList<String>> fieldLists=fieldSets.contentList;
-		for(int i=0;i<fieldLists.size();i++){
-			ArrayList<String> list=fieldLists.get(i);
-			for(int j=0;j<cells.length;j++){
-				list.remove(cells[j]);
+		Observable.from(cells).subscribe(new Action1<Integer>() {
+			@Override
+			public void call(final Integer cell) {
+				fieldSets.titleList.remove(cell.intValue());
+				ArrayList<ArrayList<String>> dataLists=fieldSets.contentList;
+				Observable.from(dataLists).subscribe(new Action1<ArrayList<String>>() {
+					@Override
+					public void call(ArrayList<String> list) {
+						list.remove(cell.intValue());
+					}
+				});
 			}
-		}
+		});
+//		
+//		for(int j=0;j<cells.length;j++){
+//			titleList.remove(cells[j].intValue());
+//		}
+//
+//		ArrayList<ArrayList<String>> fieldLists=fieldSets.contentList;
+//		for(int i=0;i<fieldLists.size();i++){
+//			ArrayList<String> list=fieldLists.get(i);
+//			for(int j=0;j<cells.length;j++){
+//				list.remove(cells[j].intValue());
+//			}
+//		}
 	}
 
 	  /***

@@ -1,16 +1,19 @@
 package com.example.tests;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Scanner;
 
 import org.junit.Test;
 
 import com.example.tests.bean.FieldBean;
 import com.example.tests.bean.FieldSets;
+import com.example.tests.configuration.ConfigParams;
 import com.example.tests.model.CreateExcelformUrlModel;
 import com.example.tests.service.FieldServiceImpl;
 import com.example.tests.model.CommitDataSetToUrlModel;
@@ -40,9 +43,20 @@ public class Main {
 	
 	
 	public static void main(String[] args) throws Exception{
-		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
-		fieldServiceImpl.createExcelFromUrl(ConstantValue.createExcelURL);
 		Scanner scanner=new Scanner(System.in);
+		ConfigParams paramsMap=ConfigParams.getInstance();
+		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
+		System.out.println("type in the website, n for last record");
+		while(scanner.hasNext()){
+			String websiteUrl=scanner.nextLine();
+			if("".equals(websiteUrl)){
+				continue;
+			}
+			if(true==fieldServiceImpl.initWebSiteConfiguration(websiteUrl)){
+				break;
+			}
+		}
+		fieldServiceImpl.createExcelFromUrl(paramsMap.getValue(ConstantValue.KEY_WEBSITE));
 		while(scanner.hasNext()){
 			String isContinue=scanner.nextLine();
 			if("y".equals(isContinue)){
@@ -50,17 +64,28 @@ public class Main {
 			}
 		}
 		FieldSets fieldSets=fieldServiceImpl.parseExcelToDataSet();
-		fieldServiceImpl.removeCells(fieldSets, ConstantValue.deleteCellsNumber);
+		fieldServiceImpl.removeCells(fieldSets, ConstantValue.DELETE_CELLS_NUMBER);
 		fieldServiceImpl.commitDataSetToUrl(fieldSets);
 		
 	}
 	
 	@Test
 	public void testData(){
+//		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
+//		FieldSets fieldSets=fieldServiceImpl.parseExcelToDataSet();
+//		fieldServiceImpl.removeCells(fieldSets, ConstantValue.deleteCellsNumber);
 		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
+//		fieldServiceImpl.createExcelFromUrl(ConstantValue.createExcelURL);
+//		Scanner scanner=new Scanner(System.in);
+//		while(scanner.hasNext()){
+//			String isContinue=scanner.nextLine();
+//			if("y".equals(isContinue)){
+//				break;
+//			}
+//		}
 		FieldSets fieldSets=fieldServiceImpl.parseExcelToDataSet();
-		fieldServiceImpl.removeCells(fieldSets, ConstantValue.deleteCellsNumber);
-
+		fieldServiceImpl.removeCells(fieldSets, ConstantValue.DELETE_CELLS_NUMBER);
+		System.out.println("sb");
 	}
 
 }

@@ -5,10 +5,8 @@
 	<classpathentry kind="lib" path="libs/apache-mime4j-0.6.jar"/>
 	<classpathentry kind="lib" path="libs/bsh-2.0b4.jar"/>
 	<classpathentry kind="lib" path="libs/cglib-nodep-2.1_3.jar"/>
-	<classpathentry kind="lib" path="libs/commons-codec-1.10.jar"/>
 	<classpathentry kind="lib" path="libs/commons-exec-1.3.jar"/>
 	<classpathentry kind="lib" path="libs/commons-io-2.4.jar"/>
-	<classpathentry kind="lib" path="libs/commons-logging-1.2.jar"/>
 	<classpathentry kind="lib" path="libs/gson-2.3.1.jar"/>
 	<classpathentry kind="lib" path="libs/guava-19.0.jar"/>
 	<classpathentry kind="lib" path="libs/hamcrest-core-1.3.jar"/>
@@ -19,7 +17,6 @@
 	<classpathentry kind="lib" path="libs/jcommander-1.48.jar"/>
 	<classpathentry kind="lib" path="libs/jna-4.1.0.jar"/>
 	<classpathentry kind="lib" path="libs/jna-platform-4.1.0.jar"/>
-	<classpathentry kind="lib" path="libs/junit-4.12.jar"/>
 	<classpathentry kind="lib" path="libs/netty-3.5.7.Final.jar"/>
 	<classpathentry kind="lib" path="libs/phantomjsdriver-1.2.1.jar"/>
 	<classpathentry kind="lib" path="libs/testng-6.9.9.jar"/>
@@ -34,5 +31,12 @@
 	<classpathentry kind="lib" path="excel2007/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="lib" path="excel2007/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="excel2007/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="excel2007/poi-excelant-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="excel2007/poi-examples-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="excel2007/poi-scratchpad-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="excel2007/curvesapi-1.03.jar"/>
+	<classpathentry kind="lib" path="excel2007/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="excel2007/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="excel2007/jxl.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
