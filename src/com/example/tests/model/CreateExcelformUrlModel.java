@@ -133,19 +133,6 @@ public class CreateExcelformUrlModel {
 		    	 contentList.add(list);
 			}
 	     });
-	     
-//	     ArrayList<String> list=new ArrayList<String>();
-//	     for(int i=0;i<webElementLists.size();i++){
-//	    	 list=new ArrayList<String>();
-//	    	 webElement=webElementLists.get(i);
-//	    	 String probleId=webElement.getAttribute("href");
-//	    	 String description=webElement.getText();
-//	    	 list.add(probleId);
-//	    	 list.add(description);
-//	    	 System.out.print(probleId+"\t"+description);
-//	    	 System.out.println();
-//	    	 contentList.add(list);
-//	     }
 	     fieldSets.contentList=contentList;
 	     return fieldSets;
 	     
@@ -213,21 +200,6 @@ public class CreateExcelformUrlModel {
 					});
 				}
 			});
-//		       for(int i=0;i<dataList.size();i++) {
-//		    	   ArrayList<String> rowList;
-//		    	   if(i==0){	//title
-//		    		   rowList=titleList;
-//		    	   }else{	//data from 0
-//		    		   rowList=dataList.get(i-1);
-//		    	   }
-//		    	   XSSFRow row = sheet.createRow(i);
-//		    	   row.setHeightInPoints(23);// 设置行高23像素  
-//		    	   for(int j=0;j<rowList.size();j++){
-//		    	        XSSFCell cell = row.createCell(j);// 创建单元格  
-//		    	        cell.setCellValue(rowList.get(j));// 写入当前日期  
-//		    	        cell.setCellStyle(style);
-//		           }
-//		       }
 	        // 文件输出流  
 	        FileOutputStream os = new FileOutputStream(createPath);  
 	        workBook.write(os);// 将文档对象写入文件输出流  
@@ -279,10 +251,6 @@ public class CreateExcelformUrlModel {
 										}
 									}
 								});
-//					for(int i=0;i<sheet.getPhysicalNumberOfRows();i++){
-//						subscriber.onNext(sheet.getRow(i));
-//						System.out.println();
-//					}
 				}}).observeOn(Schedulers.immediate())
             	   .subscribe(new Subscriber<Row>() {
 					@Override
@@ -319,21 +287,6 @@ public class CreateExcelformUrlModel {
 								list.add(value);
 							}
 						});
-//						for(int j=0;j<cellNumber;j++){
-//							Cell cell=row.getCell(j);
-//							if(null==cell){
-//								//第一列为null的整行都是无效
-//								if(j==0){
-//									return;
-//								}
-//								list.add("");
-//			            		System.out.print("nullvalue"+"\t");
-//			            		continue;
-//							}
-//							String cellValue=cell.toString();
-//		            		list.add(cellValue.trim());
-//		            		System.out.print(cellValue+"\t");
-//						}
 		            	if(row==sheet.getRow(0)){
 		            		fieldSet.titleList=list;
 		            	}else{
@@ -364,18 +317,6 @@ public class CreateExcelformUrlModel {
 				});
 			}
 		});
-//		
-//		for(int j=0;j<cells.length;j++){
-//			titleList.remove(cells[j].intValue());
-//		}
-//
-//		ArrayList<ArrayList<String>> fieldLists=fieldSets.contentList;
-//		for(int i=0;i<fieldLists.size();i++){
-//			ArrayList<String> list=fieldLists.get(i);
-//			for(int j=0;j<cells.length;j++){
-//				list.remove(cells[j].intValue());
-//			}
-//		}
 	}
 
 	  /***

@@ -49,10 +49,6 @@ public class CommitDataSetToUrlModel {
 			}
 		}
 	});
-//	  for(int i=0;i<contentLists.size();i++){
-//		  ArrayList<String> list=contentLists.get(i);
-//		  callProgram(list);
-//	  }
 //	  WebDriverUtils.closeWebDriver();
   }
   public void callProgram(ArrayList<String> list)throws Exception{
