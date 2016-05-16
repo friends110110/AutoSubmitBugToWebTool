@@ -39,6 +39,7 @@ public class ConfigParams {
 			String firefoxPath = null;
 			while(scanner.hasNext()){
 				firefoxPath=scanner.nextLine().trim();
+				firefoxPath=firefoxPath.replace("\\", "/");
 				if(firefoxPath.matches(reg)){
 					System.out.println("已经保存路径，下次无需再输了");
 					break;
@@ -59,7 +60,9 @@ public class ConfigParams {
 			FileInputStream in = new FileInputStream(ConstantValue.CONFIGURATION_FILE_PATH);
 			Properties properties=new  Properties();
 			properties.load(in);
-			paramsMap.put(ConstantValue.KEY_FIREFOX_PATH,properties.getProperty(ConstantValue.KEY_FIREFOX_PATH, ConstantValue.DEFAULT_FIREFOX_PATH));
+			String firefoxPath=properties.getProperty(ConstantValue.KEY_FIREFOX_PATH, ConstantValue.DEFAULT_FIREFOX_PATH);
+			paramsMap.put(ConstantValue.KEY_FIREFOX_PATH,firefoxPath);
+			System.out.println("It had read the firefoxPath:  "+firefoxPath);
 			in.close();
 		}
 	}
