@@ -1,6 +1,9 @@
 package com.example.tests.service;
 
+import java.io.IOException;
+
 import com.example.tests.bean.FieldSets;
+import com.example.tests.configuration.ConfigParams;
 import com.example.tests.model.CommitDataSetToUrlModel;
 import com.example.tests.model.CreateExcelformUrlModel;
 import com.example.tests.tool.ConstantValue;
@@ -36,6 +39,10 @@ public class FieldServiceImpl {
 	}
 	public void removeCells(FieldSets fieldSets,Integer... cells){
 		createExcelformUrlModel.removeCells(fieldSets, cells);
+	}
+
+	public void initParam() throws IOException {
+		ConfigParams.getInstance().initParams();
 	}
 	
 	

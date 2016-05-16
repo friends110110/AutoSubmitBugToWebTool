@@ -46,13 +46,15 @@ public class Main {
 		Scanner scanner=new Scanner(System.in);
 		ConfigParams paramsMap=ConfigParams.getInstance();
 		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
-		System.out.println("type in the website, n for last record");
+		fieldServiceImpl.initParam();
+		System.out.println("type in the website, n for the historical lastest record");
 		while(scanner.hasNext()){
-			String websiteUrl=scanner.nextLine();
+			String websiteUrl=scanner.nextLine().trim();
 			if("".equals(websiteUrl)){
 				continue;
 			}
 			if(true==fieldServiceImpl.initWebSiteConfiguration(websiteUrl)){
+				System.out.println("please login in the foxfire ");
 				break;
 			}
 		}

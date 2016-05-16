@@ -119,6 +119,7 @@ public class CreateExcelformUrlModel {
 	     WebElement webElement=webDriver.findElement(By.xpath("//td[@class='nav summary']"));
 	     List<WebElement> webElementLists = webDriver.findElements(By.xpath(("//td[@class='nav summary']/a")));  
 	     final ArrayList<ArrayList<String>> contentList=new ArrayList<ArrayList<String>>();
+		 System.out.println("fetch data from website:  "+ url);
 	     Observable.from(webElementLists).subscribe(new Action1<WebElement>(){
 			@Override
 			public void call(WebElement element) {
@@ -232,6 +233,9 @@ public class CreateExcelformUrlModel {
 	        workBook.write(os);// 将文档对象写入文件输出流  
 		    os.close();// 关闭文件输出流  
 		    System.out.println("创建成功 office 2007 excel");  
+			System.out.println("please modify the information at  "+ConstantValue.BACKUP_FILE_PATH);
+			System.out.println("修改完成后，务必要保存哦！然后输入 y 继续...");
+
 		}catch(Exception e){
 			e.printStackTrace();
 			return false;

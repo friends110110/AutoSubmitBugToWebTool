@@ -11,6 +11,8 @@ import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 
+import com.example.tests.configuration.ConfigParams;
+
 public class WebDriverUtils {
 
 	private static WebDriver driver;
@@ -19,8 +21,9 @@ public class WebDriverUtils {
 	 * @return the webDriver object is used for deal with something about web operation
 	 */
 	public static WebDriver getWebDriver(){
+		ConfigParams param=ConfigParams.getInstance();
 		if(null==driver){
-			 File pathBinary = new File(ConstantValue.FIREEFOX_PATH);
+			 File pathBinary = new File(param.getValue(ConstantValue.KEY_FIREFOX_PATH));
 			 FirefoxBinary Binary = new FirefoxBinary(pathBinary);
 			 FirefoxProfile firefoxPro = new FirefoxProfile();   
 			 driver = new FirefoxDriver(Binary,firefoxPro);  
