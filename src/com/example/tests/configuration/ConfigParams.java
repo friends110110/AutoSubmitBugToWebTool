@@ -9,10 +9,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.openqa.selenium.firefox.FirefoxBinary;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
+
 import java.util.Properties;
 import java.util.Scanner;
 
 import com.example.tests.tool.ConstantValue;
+import com.example.tests.tool.WebDriverUtils;
 
 public class ConfigParams {
 
@@ -36,7 +42,7 @@ public class ConfigParams {
 	public void initParams() throws Exception {
 		File file=new File(ConstantValue.CONFIGURATION_FILE_PATH);
 		if(!file.exists()){
-			System.out.println("本应用需要安装 JDK、firefox浏览器");
+			System.out.println("本应用需要安装 firefox浏览器");
 			System.out.println("please type in the firefox path: like D:/Program Files (x86)/Mozilla Firefox/firefox.exe");
 			Scanner scanner =new Scanner(System.in);
 			String reg="(^//.|^/|^[a-zA-Z])?:?/.+(/$)?";
@@ -45,7 +51,13 @@ public class ConfigParams {
 				firefoxPath=scanner.nextLine().trim();
 				firefoxPath=firefoxPath.replace("\\", "/");
 				if(firefoxPath.matches(reg)){
-					paramsMap.put(ConstantValue.KEY_FIREFOX_PATH, firefoxPath);
+					try{
+						paramsMap.put(ConstantValue.KEY_FIREFOX_PATH, firefoxPath);
+						WebDriverUtils.getWebDriver();
+					}catch(Exception e){
+						System.out.println("Specified firefox binary location does not exist or is not a real file: "+firefoxPath);
+						continue;
+					}
 					System.out.println("已经保存路径，下次无需再输了");
 					break;
 				}else{

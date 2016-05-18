@@ -19,15 +19,17 @@ public class WebDriverUtils {
 	/**
 	 * 
 	 * @return the webDriver object is used for deal with something about web operation
+	 * @throws Exception 
 	 */
-	public static WebDriver getWebDriver(){
+	public static WebDriver getWebDriver() {
 		ConfigParams param=ConfigParams.getInstance();
 		if(null==driver){
 			 File pathBinary = new File(param.getValue(ConstantValue.KEY_FIREFOX_PATH));
 			 FirefoxBinary Binary = new FirefoxBinary(pathBinary);
 			 FirefoxProfile firefoxPro = new FirefoxProfile();   
 			 driver = new FirefoxDriver(Binary,firefoxPro);  
-		     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		     //driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+			 
 		}
 		return driver;
 	}
