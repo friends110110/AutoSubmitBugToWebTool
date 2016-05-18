@@ -63,55 +63,7 @@ public class CreateExcelformUrlModel {
      XSSFRow row =null;
 	 ConfigParams paramsMap=ConfigParams.getInstance();
 
-	/**
-	 * 
-	 * @param param  the value is "n" or a legal website
-	 * @return true for success, false for failure
-	 */
-     public boolean initWebSiteConfiguration(String param) {
-    	 boolean isUrl=param.matches("(http|ftp|https):\\/\\/([\\w.]+\\/?)\\S*");
-    	 if(!"n".equalsIgnoreCase(param)&&!isUrl){
-    		 System.out.println("the website you typed in has mistakes,type in again");
-    		 return false;
-    	 }
-    	 try{
-    		 Properties properties=new  Properties();
-    		 File file=new File(ConstantValue.CONFIGURATION_FILE_PATH);
-    		 FileInputStream in = null;
-	    	 if("n".equals(param)){
-	    		 if(!file.exists()){
-	    			 return false;
-	    		 }
-				 in = new FileInputStream(ConstantValue.CONFIGURATION_FILE_PATH);
-	    		 properties.load(in);
-	    		 in.close();
-	    		 String websiteUrl=properties.getProperty(ConstantValue.KEY_WEBSITE);
-	    		 if(websiteUrl==null||!websiteUrl.matches("(http|ftp|https):\\/\\/([\\w.]+\\/?)\\S*")){
-	    			 System.out.println("the latest website url has mistaken");
-	    			 return false;
-	    		 }
-	    		 paramsMap.setValue(ConstantValue.KEY_WEBSITE, properties.getProperty(ConstantValue.KEY_WEBSITE));
-			 }else{
-				 if(!file.exists()){
-	    			 file.createNewFile();
-	    		 }
-				 in = new FileInputStream(ConstantValue.CONFIGURATION_FILE_PATH);
-	    		 properties.load(in);
-	    		 in.close();
-	    		 paramsMap.setValue(ConstantValue.KEY_WEBSITE, param);
-				 properties.setProperty(ConstantValue.KEY_WEBSITE,param);
-				 FileOutputStream writeFile = new FileOutputStream(file);
-				 properties.store(writeFile, "website =' url you type in'");
-				 writeFile.close();
-			 }
-	    	 
-    	 }catch(Exception e){
-				System.out.println("file is non-existence or the website key is non-existence,"
-						+ "	please type in the website again");
-    		 return false;
-    	 }
-    	 return true;
-     }
+	
 	 /**
 	  * 根据url地址生成 xlsx表格，
 	  * problemId	description result	solution	comment
@@ -121,6 +73,7 @@ public class CreateExcelformUrlModel {
 	 public FieldSets getDataFromUrl(String url){
 		 FieldSets fieldSets=new FieldSets();
 		 WebDriver webDriver=WebDriverUtils.getWebDriver();
+		 System.out.println("please login in the foxfire ");
 	     webDriver.get(url);
 	     WebElement webElement=webDriver.findElement(By.xpath("//td[@class='nav summary']"));
 	     List<WebElement> webElementLists = webDriver.findElements(By.xpath(("//td[@class='nav summary']/a")));  
@@ -212,13 +165,13 @@ public class CreateExcelformUrlModel {
 		    os.close();// 关闭文件输出流  
 		    System.out.println("创建成功 office 2007 excel");  
 			System.out.println("please modify the information at  "+ConstantValue.BACKUP_FILE_PATH);
-			System.out.println("修改完成后，务必要保存哦，最好关闭文件！然后输入 y 继续...");
+			System.out.println("请修改文件，修改完毕后，务必要保存哦，最好关闭文件！然后输入 y 继续...");
 			Scanner scanner=new Scanner(System.in);
 			while(scanner.hasNext()){
-			String isContinue=scanner.nextLine();
-			if("y".equals(isContinue)){
-				break;
-			}
+				String isContinue=scanner.nextLine();
+				if("y".equals(isContinue)){
+					break;
+				}
 		}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -230,7 +183,7 @@ public class CreateExcelformUrlModel {
 		 File file=new File(ConstantValue.BACKUP_FILE_PATH);
 		 if(file.exists()){
 			 if(false==file.delete()){
-				 System.out.println("please close file at" +ConstantValue.BACKUP_FILE_PATH);
+				 System.out.println("please close file at  " +ConstantValue.BACKUP_FILE_PATH);
 				 System.out.println(" type in y to continue .....");
 				 Scanner scanner=new Scanner(System.in);
 				 while(scanner.hasNext()){
@@ -244,7 +197,7 @@ public class CreateExcelformUrlModel {
 						}
 					}
 			 }
-			 System.out.println("success to restore this file");
+			 System.out.println("success to delete this file ,and will restore this file");
 		 }
 	 }
 	    /**

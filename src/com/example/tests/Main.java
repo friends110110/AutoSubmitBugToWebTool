@@ -73,24 +73,10 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws Exception{
-		Scanner scanner=new Scanner(System.in);
 		ConfigParams paramsMap=ConfigParams.getInstance();
+		paramsMap.initParams();
 		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
-		fieldServiceImpl.initParam();
-		System.out.println("type in the website, n for the historical lastest record");
-		while(scanner.hasNext()){
-			String websiteUrl=scanner.nextLine().trim();
-			if("".equals(websiteUrl)){
-				continue;
-			}
-			if(true==fieldServiceImpl.initWebSiteConfiguration(websiteUrl)){
-				System.out.println("please login in the foxfire ");
-				break;
-			}
-		}
-		
-//		fieldServiceImpl.createExcelFromUrl(paramsMap.getValue(ConstantValue.KEY_WEBSITE));
-
+		fieldServiceImpl.createExcelFromUrl(paramsMap.getValue(ConstantValue.KEY_WEBSITE));
 		while(true){
 			FieldSets fieldSets=fieldServiceImpl.parseExcelToDataSet();
 			//fieldServiceImpl.removeCells(fieldSets, ConstantValue.DELETE_CELLS_NUMBER);

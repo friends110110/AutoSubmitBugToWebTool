@@ -81,7 +81,7 @@ public class CommitDataSetToUrlModel {
 	    driver.findElement(By.id("action_id_721")).click();
 	    if(null!=assignComment&&!"".equals(assignComment)){
 	    	driver.findElement(By.id("comment")).clear();
-	    	driver.findElement(By.id("comment")).sendKeys("dasdsfdsdfsdf");
+	    	driver.findElement(By.id("comment")).sendKeys(assignComment);
 	    }
 	    //it is the Chinese name
 	    String regex = "[\u4E00-\u9FA5]+";

@@ -22,9 +22,9 @@ public class FieldServiceImpl {
 		commitExcelToUrlModel=new CommitDataSetToUrlModel();
 	}
 	
-    public boolean initWebSiteConfiguration(String params)throws Exception{
-    	return createExcelformUrlModel.initWebSiteConfiguration(params);
-    }
+//    public boolean initWebSiteConfiguration(String params)throws Exception{
+//    	return createExcelformUrlModel.initWebSiteConfiguration(params);
+//    }
 	/**
 	 * 
 	 * @param url
@@ -70,9 +70,6 @@ public class FieldServiceImpl {
 		createExcelformUrlModel.removeCells(fieldSets, cells);
 	}
 
-	public void initParam() throws IOException {
-		ConfigParams.getInstance().initParams();
-	}
 	
 	
 	
