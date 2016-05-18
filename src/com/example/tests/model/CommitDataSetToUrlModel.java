@@ -78,19 +78,25 @@ public class CommitDataSetToUrlModel {
 	    	result="解决(修复成功)";
 	    }	
 	    driver.get(problemUrl);
-	    driver.findElement(By.id("action_id_721")).click();
-	    if(null!=assignComment&&!"".equals(assignComment)){
-	    	driver.findElement(By.id("comment")).clear();
-	    	driver.findElement(By.id("comment")).sendKeys(assignComment);
-	    }
-	    //it is the Chinese name
-	    String regex = "[\u4E00-\u9FA5]+";
-	    if(null!=assignUser&&!"".equals(assignUser)&&assignUser.matches(regex)){
-	    	new Select(driver.findElement(By.id("assignee"))).selectByVisibleText(assignUser);
+	    try{
+		    driver.findElement(By.id("action_id_721")).click();
+		    if(null!=assignComment&&!"".equals(assignComment)){
+		    	driver.findElement(By.id("comment")).clear();
+		    	driver.findElement(By.id("comment")).sendKeys(assignComment);
+		    }
+		    //it is the Chinese name
+		    String regex = "[\u4E00-\u9FA5]+";
+		    if(null!=assignUser&&!"".equals(assignUser)&&assignUser.matches(regex)){
+		    	new Select(driver.findElement(By.id("assignee"))).selectByVisibleText(assignUser);
+			    driver.findElement(By.id("分配任务")).click();
+			    return;
+		    }
 		    driver.findElement(By.id("分配任务")).click();
-		    return;
+	    }catch(Exception e){
+	    	String problemId=problemUrl.substring(problemUrl.lastIndexOf("/"),problemUrl.length());
+	    	System.out.println(problemId+"  this task has been assigned, now solve it directly");
 	    }
-	    driver.findElement(By.id("分配任务")).click();
+	    //mock operation click to solve bug
 	    driver.findElement(By.id("action_id_751")).click();
 	    new Select(driver.findElement(By.id("resolution"))).selectByVisibleText(result);
 	    new Select(driver.findElement(By.id("customfield_10330"))).selectByVisibleText("其他");
