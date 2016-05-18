@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Scanner;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -84,6 +85,11 @@ public class CreateExcelformUrlModel {
 				 in = new FileInputStream(ConstantValue.CONFIGURATION_FILE_PATH);
 	    		 properties.load(in);
 	    		 in.close();
+	    		 String websiteUrl=properties.getProperty(ConstantValue.KEY_WEBSITE);
+	    		 if(websiteUrl==null||!websiteUrl.matches("(http|ftp|https):\\/\\/([\\w.]+\\/?)\\S*")){
+	    			 System.out.println("the latest website url has mistaken");
+	    			 return false;
+	    		 }
 	    		 paramsMap.setValue(ConstantValue.KEY_WEBSITE, properties.getProperty(ConstantValue.KEY_WEBSITE));
 			 }else{
 				 if(!file.exists()){
@@ -206,14 +212,41 @@ public class CreateExcelformUrlModel {
 		    os.close();// 关闭文件输出流  
 		    System.out.println("创建成功 office 2007 excel");  
 			System.out.println("please modify the information at  "+ConstantValue.BACKUP_FILE_PATH);
-			System.out.println("修改完成后，务必要保存哦！然后输入 y 继续...");
-
+			System.out.println("修改完成后，务必要保存哦，最好关闭文件！然后输入 y 继续...");
+			Scanner scanner=new Scanner(System.in);
+			while(scanner.hasNext()){
+			String isContinue=scanner.nextLine();
+			if("y".equals(isContinue)){
+				break;
+			}
+		}
 		}catch(Exception e){
 			e.printStackTrace();
 			return false;
 		}
 		return true;
 	}
+	 public void deleteExcelFile(){
+		 File file=new File(ConstantValue.BACKUP_FILE_PATH);
+		 if(file.exists()){
+			 if(false==file.delete()){
+				 System.out.println("please close file at" +ConstantValue.BACKUP_FILE_PATH);
+				 System.out.println(" type in y to continue .....");
+				 Scanner scanner=new Scanner(System.in);
+				 while(scanner.hasNext()){
+						String isContinue=scanner.nextLine();
+						if("y".equals(isContinue)){
+							if(false==file.delete()){
+								 System.out.println(" you must not close this file ,fuck .....");
+								 continue;
+							}
+							break;
+						}
+					}
+			 }
+			 System.out.println("success to restore this file");
+		 }
+	 }
 	    /**
 	     * 读取excel文件内容
 	     * @param filePath

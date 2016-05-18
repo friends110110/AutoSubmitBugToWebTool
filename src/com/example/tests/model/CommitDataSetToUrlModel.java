@@ -35,31 +35,40 @@ public class CommitDataSetToUrlModel {
   }
   
   public void callProgram(FieldSets fieldSet) throws Exception {
-	  ArrayList<ArrayList<String>> contentLists=fieldSet.contentList;
+	  final ArrayList<ArrayList<String>> contentLists=fieldSet.contentList;
 	  if(contentLists.size()<=0){
 		  throw new Exception("数据数太少 明显不对");
 	  } 
 	  Observable.from(contentLists).subscribe(new Action1<ArrayList<String>>() {
 		@Override
 		public void call(ArrayList<String> list) {
-			try {
-				callProgram(list);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+				try {
+					callProgram(list);
+				} catch (NoSuchElementException e) {
+					e.printStackTrace();
+					throw e;
+				}
+				System.out.println(list.toString() +"  has successfully been submited ");
+				contentLists.remove(list);
+		}
+	},new Action1<Throwable>() {
+		@Override
+		public void call(Throwable e) {
+			System.out.println( "  has faafsd been submited ");
+			System.out.println( e.getMessage());
 		}
 	});
 //	  WebDriverUtils.closeWebDriver();
   }
-  public void callProgram(ArrayList<String> list)throws Exception{
-	  if(list.size()<4){
-		  throw new Exception("输入参数不够");
-	  }
+  public void callProgram(ArrayList<String> list){
 	  String problemUrl=list.get(0);
-	  String result=list.get(1);
-	  String solution=list.get(2);
-	  String comment=list.get(3);
-	  callProgram(problemUrl,result,solution,comment);
+	  //  list.get(1)   description  is just message
+	  String result=list.get(2);
+	  String solution=list.get(3);
+	  String comment=list.get(4);
+	  String assignUser=list.get(5);
+	  String assignComment=list.get(6);
+	  callProgram(problemUrl,result,solution,comment,assignUser,assignComment);
   }
   //solve one problem 
 /**
@@ -69,12 +78,25 @@ public class CommitDataSetToUrlModel {
  * @param solution
  * @param comment
  */
-  public void callProgram(String problemUrl,String result,String solution,String comment)throws Exception{
+  public void callProgram(String problemUrl,String result,String solution,String comment,
+		  String assignUser,String assignComment) {
 	    if(null==result||"".equals(result)){
 	    	result="解决(修复成功)";
 	    }	
 	    driver.get(problemUrl);
 	    driver.findElement(By.id("action_id_721")).click();
+	    if(null!=assignComment&&!"".equals(assignComment)){
+	    	driver.findElement(By.id("comment")).clear();
+	    	driver.findElement(By.id("comment")).sendKeys("dasdsfdsdfsdf");
+	    }
+	    //it is the Chinese name
+	    String regex = "[\u4E00-\u9FA5]+";
+	    if(null!=assignUser&&!"".equals(assignUser)&&assignUser.matches(regex)){
+	    	new Select(driver.findElement(By.id("assignee"))).selectByVisibleText(assignUser);
+		    driver.findElement(By.id("分配任务")).click();
+		    return;
+	    }
+	    
 	    driver.findElement(By.id("分配任务")).click();
 	    driver.findElement(By.id("action_id_751")).click();
 	    new Select(driver.findElement(By.id("resolution"))).selectByVisibleText(result);

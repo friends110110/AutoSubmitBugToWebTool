@@ -8,7 +8,7 @@
 	<classpathentry kind="lib" path="libs/commons-exec-1.3.jar"/>
 	<classpathentry kind="lib" path="libs/commons-io-2.4.jar"/>
 	<classpathentry kind="lib" path="libs/gson-2.3.1.jar"/>
-	<classpathentry kind="lib" path="libs/guava-19.0.jar"/>
+	<classpathentry kind="lib" path="libs/guava-19.0.jar" sourcepath="D:/Program Files/Java/other_jar/poi-src-3.14.zip"/>
 	<classpathentry kind="lib" path="libs/hamcrest-core-1.3.jar"/>
 	<classpathentry kind="lib" path="libs/hamcrest-library-1.3.jar"/>
 	<classpathentry kind="lib" path="libs/httpclient-4.5.1.jar"/>
@@ -26,7 +26,7 @@
 	<classpathentry kind="lib" path="libs/rxjava-1.1.1.jar"/>
 	<classpathentry kind="lib" path="excel2007/junit-4.12.jar"/>
 	<classpathentry kind="lib" path="excel2007/poi-3.14-20160307.jar"/>
-	<classpathentry kind="lib" path="excel2007/poi-ooxml-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="excel2007/poi-ooxml-3.14-20160307.jar" sourcepath="D:/Program Files/Java/other_jar/poi-src-3.14.zip"/>
 	<classpathentry kind="lib" path="excel2007/poi-ooxml-schemas-3.14-20160307.jar"/>
 	<classpathentry kind="lib" path="excel2007/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="lib" path="excel2007/dom4j-1.6.1.jar"/>

@@ -1,5 +1,6 @@
 package com.example.tests;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +19,9 @@ import com.example.tests.model.CreateExcelformUrlModel;
 import com.example.tests.service.FieldServiceImpl;
 import com.example.tests.model.CommitDataSetToUrlModel;
 import com.example.tests.tool.ConstantValue;
+
+import rx.Observable;
+import rx.functions.Action1;
 
 public class Main {
 
@@ -40,7 +44,33 @@ public class Main {
 		fileTool.createExcel("e:\\44.xlsx",fieldSet);
 		
 	}
-	
+	@Test
+	public void testWriteFileAgain(){
+		CreateExcelformUrlModel fileTool=new CreateExcelformUrlModel(); 
+		final ArrayList<ArrayList<String>> data =new ArrayList<ArrayList<String>> ();
+		for(int i=0;i<5;i++){
+			ArrayList<String> str=new ArrayList<String>();
+			for(int j=0;j<3;j++){
+				str.add(i+"  "+String.valueOf(j));
+			}
+			data.add(str);
+		}
+		Observable.from(data).subscribe(new Action1<ArrayList<String>>(){
+
+			@Override
+			public void call(ArrayList<String> list) {
+				// TODO Auto-generated method stub
+				data.remove(list);
+			}
+			
+		});
+		FieldSets fieldSet=new FieldSets();
+		String []titles={"problem_id","description","solution","comment"};
+		ArrayList<String> titleList=new ArrayList(Arrays.asList(titles));
+		fieldSet.titleList=titleList;
+		fieldSet.contentList=data;
+		fileTool.createExcel(ConstantValue.BACKUP_FILE_PATH, fieldSet);
+	}
 	
 	public static void main(String[] args) throws Exception{
 		Scanner scanner=new Scanner(System.in);
@@ -58,17 +88,17 @@ public class Main {
 				break;
 			}
 		}
-		fieldServiceImpl.createExcelFromUrl(paramsMap.getValue(ConstantValue.KEY_WEBSITE));
-		while(scanner.hasNext()){
-			String isContinue=scanner.nextLine();
-			if("y".equals(isContinue)){
+		
+//		fieldServiceImpl.createExcelFromUrl(paramsMap.getValue(ConstantValue.KEY_WEBSITE));
+
+		while(true){
+			FieldSets fieldSets=fieldServiceImpl.parseExcelToDataSet();
+			//fieldServiceImpl.removeCells(fieldSets, ConstantValue.DELETE_CELLS_NUMBER);
+			fieldServiceImpl.commitDataSetToUrl(fieldSets);
+			if(fieldSets.contentList.size()==0){
 				break;
 			}
 		}
-		FieldSets fieldSets=fieldServiceImpl.parseExcelToDataSet();
-		fieldServiceImpl.removeCells(fieldSets, ConstantValue.DELETE_CELLS_NUMBER);
-		fieldServiceImpl.commitDataSetToUrl(fieldSets);
-		
 	}
 	
 	@Test
@@ -85,6 +115,8 @@ public class Main {
 //				break;
 //			}
 //		}
+		
+		
 		FieldSets fieldSets=fieldServiceImpl.parseExcelToDataSet();
 		fieldServiceImpl.removeCells(fieldSets, ConstantValue.DELETE_CELLS_NUMBER);
 		System.out.println("sb");
