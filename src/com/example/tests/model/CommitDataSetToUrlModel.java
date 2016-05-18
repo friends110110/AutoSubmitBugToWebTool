@@ -42,20 +42,14 @@ public class CommitDataSetToUrlModel {
 	  Observable.from(contentLists).subscribe(new Action1<ArrayList<String>>() {
 		@Override
 		public void call(ArrayList<String> list) {
-				try {
-					callProgram(list);
-				} catch (NoSuchElementException e) {
-					e.printStackTrace();
-					throw e;
-				}
-				System.out.println(list.toString() +"  has successfully been submited ");
-				contentLists.remove(list);
-		}
-	},new Action1<Throwable>() {
-		@Override
-		public void call(Throwable e) {
-			System.out.println( "  has faafsd been submited ");
-			System.out.println( e.getMessage());
+			try {
+				callProgram(list);
+			} catch (NoSuchElementException e) {
+				e.printStackTrace();
+				throw e;
+			}
+			System.out.println(list.toString() +"  has successfully been submited ");
+			contentLists.remove(list);
 		}
 	});
 //	  WebDriverUtils.closeWebDriver();
@@ -96,7 +90,6 @@ public class CommitDataSetToUrlModel {
 		    driver.findElement(By.id("分配任务")).click();
 		    return;
 	    }
-	    
 	    driver.findElement(By.id("分配任务")).click();
 	    driver.findElement(By.id("action_id_751")).click();
 	    new Select(driver.findElement(By.id("resolution"))).selectByVisibleText(result);
