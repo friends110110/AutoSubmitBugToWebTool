@@ -18,4 +18,7 @@ it takes too much time to solve a problem.
 
 after use this tool:
 
-  it could help us to get all the bugs description from the bugs system url ,and create a bugs.xlxs file. you could modify the file and save it. the tool will help us to submit all the problems just a moment. It could help us to develop more efficiently.
+![image](/pics/5.png)
+  it could help us to get all the bugs description from the bugs system url ,and create a bugs.xlxs file. you could modify the file and save it. The tool will help us to submit all the problems just a moment.
+  
+  ##  This tool could help us to develop more efficiently.
