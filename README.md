@@ -8,7 +8,7 @@ secondly, the tool could help us to fetch some useful information ,and save it i
 
 Last but not least,we could commit the necessary information to the url which we fetch from the website.
 
-before: there are too much steps.following:
+before: there are too much steps we should do.following:
 ![image](/pics/1.png)
 ![image](/pics/2.png)
 ![image](/pics/3.png)
