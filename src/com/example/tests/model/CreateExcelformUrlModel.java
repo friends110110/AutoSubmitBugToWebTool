@@ -21,6 +21,7 @@ import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -111,16 +112,26 @@ public class CreateExcelformUrlModel {
 	        XSSFWorkbook workBook = new XSSFWorkbook();  
 	        final XSSFSheet sheet = workBook.createSheet();// 创建一个工作薄对象  
 	        sheet.setColumnWidth(1, 10000);// 设置第二列的宽度为  
+	        sheet.setColumnWidth(3, titleList.get(3).getBytes().length*2*256);
+	        sheet.setColumnWidth(4, titleList.get(4).getBytes().length*2*256);
+	        sheet.setColumnWidth(6, titleList.get(6).getBytes().length*2*256);
+
 	        final XSSFCellStyle style = workBook.createCellStyle();// 创建样式对象  
 	        // 设置字体  
 	        XSSFFont font = workBook.createFont();// 创建字体对象  
-	        font.setFontHeightInPoints((short) 15);// 设置字体大小  
-	        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);// 设置粗体  
-	        font.setFontName("黑体");// 设置为黑体字  
+	        font.setFontHeightInPoints((short) 11);// 设置字体大小  
+	        font.setBoldweight(HSSFFont.DEFAULT_CHARSET);// 设置粗体  
+	        font.setFontName("宋体");// 设置为黑体字  
 	        style.setFont(font);// 将字体加入到样式对象  
 	        // 设置对齐方式  
 	        style.setAlignment(HSSFCellStyle.ALIGN_CENTER_SELECTION);// 水平居中  
 	        style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);// 垂直居中  
+	        //自动换行
+	        style.setWrapText(true);
+	        
+	        //调整列宽以使用内容长度  
+	        sheet.autoSizeColumn(2,true);  
+	        sheet.autoSizeColumn((short)3,true);  
 	        // 设置边框  
 	        style.setBorderTop(HSSFCellStyle.BORDER_THICK);// 顶部边框粗线  
 	        style.setTopBorderColor(HSSFColor.RED.index);// 设置为红色  
@@ -137,7 +148,9 @@ public class CreateExcelformUrlModel {
 						@Override
 						public void call(Integer rowIndex) {
 					    	row = sheet.createRow(rowIndex);
-					    	row.setHeightInPoints(23);// 设置行高23像素  
+					    	//row.setHeightInPoints(23);
+					    	//增加单元格的高度 以能够容纳2行字   
+					    	row.setHeightInPoints(2*sheet.getDefaultRowHeightInPoints());  
 							if(0==rowIndex){
 								rowSubscribe.onNext(titleList);
 							}else{

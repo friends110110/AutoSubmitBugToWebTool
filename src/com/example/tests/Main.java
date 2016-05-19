@@ -32,7 +32,7 @@ public class Main {
 		for(int i=0;i<5;i++){
 			ArrayList<String> str=new ArrayList<String>();
 			for(int j=0;j<3;j++){
-				str.add(i+"  "+String.valueOf(j));
+				str.add(i+"  "+String.valueOf(j)+"安抚安抚安抚安抚安抚萨芬的安抚安抚暗室逢灯安抚暗室逢灯暗室逢灯安抚安抚安抚阿斯蒂芬萨芬的昂视发");
 			}
 			data.add(str);
 		}
@@ -89,10 +89,11 @@ public class Main {
 	
 	@Test
 	public void testData(){
+		CreateExcelformUrlModel fileTool=new CreateExcelformUrlModel(); 
 //		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
 //		FieldSets fieldSets=fieldServiceImpl.parseExcelToDataSet();
 //		fieldServiceImpl.removeCells(fieldSets, ConstantValue.deleteCellsNumber);
-		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
+		//FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
 //		fieldServiceImpl.createExcelFromUrl(ConstantValue.createExcelURL);
 //		Scanner scanner=new Scanner(System.in);
 //		while(scanner.hasNext()){
@@ -103,9 +104,10 @@ public class Main {
 //		}
 		
 		
-		FieldSets fieldSets=fieldServiceImpl.parseExcelToDataSet();
-		fieldServiceImpl.removeCells(fieldSets, ConstantValue.DELETE_CELLS_NUMBER);
-		System.out.println("sb");
+		FieldSets fieldSets=fileTool.parseExcelToDataSets(ConstantValue.BACKUP_FILE_PATH);
+		fileTool.deleteExcelFile();
+		boolean is=fileTool.createExcel(ConstantValue.BACKUP_FILE_PATH, fieldSets);
+		System.out.println(is);
 	}
 
 }

@@ -89,6 +89,7 @@ public class ConfigParams {
 			if("".equals(websiteUrl)){
 				continue;
 			}
+			//the latest website is useful
 			if(true==typeInWebSiteConfiguration(websiteUrl)){
 				if(!"n".equals(websiteUrl)){
 					File file=new File(ConstantValue.CONFIGURATION_FILE_PATH);
@@ -99,6 +100,8 @@ public class ConfigParams {
 					}
 					properties.store(writeFile, "create configuration");
 					writeFile.close();
+					break;
+				}else{
 					break;
 				}
 			}
