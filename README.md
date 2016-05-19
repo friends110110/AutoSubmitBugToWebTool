@@ -8,12 +8,13 @@ secondly, the tool could help us to fetch some useful information ,and save it i
 
 Last but not least,we could commit the necessary information to the url which we fetch from the website.
 
-before:
-![image](https://github.com/friends110110/AutoSubmitBugTool/tree/master/pics/1.png)
-![image](https://github.com/friends110110/AutoSubmitBugTool/tree/master/pics/2.png)
-![image](https://github.com/friends110110/AutoSubmitBugTool/tree/master/pics/3.png)
-![image](https://github.com/friends110110/AutoSubmitBugTool/tree/master/pics/4.png)
+before: there are too much steps.following:
+![image](/pics/1.png)
+![image](/pics/2.png)
+![image](/pics/3.png)
+![image](/pics/4.png)
+
 it takes too much time to solve a problem.
 
-after:
-  the tool will get all the bugs description,and create bugs.xlxs file.you should modify the file.and the tool will submit all the problems. It could help us to develop more efficiently.
+after use this tool:
+  it will get all the bugs description from the bugs system url ,and create bugs.xlxs file. you could modify the file and save it. the tool will help us to submit all the problems just a moment. It could help us to develop more efficiently.
