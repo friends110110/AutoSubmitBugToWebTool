@@ -64,7 +64,6 @@ public class FieldServiceImpl {
 				}
 			});
 			contentLists.removeAll(delContentLists);
-		
 	}
 	public void removeCells(FieldSets fieldSets,Integer... cells){
 		createExcelformUrlModel.removeCells(fieldSets, cells);

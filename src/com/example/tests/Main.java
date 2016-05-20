@@ -73,8 +73,27 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws Exception{
+		Scanner scanner=new Scanner(System.in);
+		String params;
 		ConfigParams paramsMap=ConfigParams.getInstance();
-		paramsMap.initParams();
+		if(!paramsMap.isExistConf()){
+			while(scanner.hasNext()){
+				params=scanner.nextLine(); 
+				if(true==paramsMap.createConfFile(params)){
+					break;
+				}
+			}
+		}else{
+			paramsMap.readConfFile();
+		}
+		System.out.println("type in the website, n for the historical lastest record");
+		while(scanner.hasNext()){
+			params=scanner.nextLine(); 
+			if(true==paramsMap.setWebsiteUrl(params)){
+				System.out.println("文件保存成功");
+				break;
+			}
+		}
 		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
 		if(true==fieldServiceImpl.createExcelFromUrl(paramsMap.getValue(ConstantValue.KEY_WEBSITE))){
 			 System.out.println("please modify the information at  "+ConstantValue.BACKUP_FILE_PATH);
@@ -82,7 +101,6 @@ public class Main {
 		}else{
 			 System.out.println("fail to create excel");
 		}
-		Scanner scanner=new Scanner(System.in);
 		while(scanner.hasNext()){
 			String isContinueFlag=scanner.nextLine();
 			if("y".equals(isContinueFlag)){
@@ -97,6 +115,7 @@ public class Main {
 				break;
 			}
 		}
+		scanner.close();
 	}
 	
 	@Test

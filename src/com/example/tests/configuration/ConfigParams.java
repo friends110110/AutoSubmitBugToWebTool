@@ -39,32 +39,35 @@ public class ConfigParams {
 	public String setValue(String key,String value){
 		return paramsMap.put(key,value);
 	}
-	public void initParams() throws Exception {
+	public boolean isExistConf(){
 		File file=new File(ConstantValue.CONFIGURATION_FILE_PATH);
-		if(!file.exists()){
+		boolean isFileExist= file.exists();
+		if(false == isFileExist){
 			System.out.println("本应用需要安装 firefox浏览器");
 			System.out.println("please type in the firefox path: like D:/Program Files (x86)/Mozilla Firefox/firefox.exe");
-			Scanner scanner =new Scanner(System.in);
-			String reg="(^//.|^/|^[a-zA-Z])?:?/.+(/$)?";
-			String firefoxPath = null;
-			while(scanner.hasNext()){
-				firefoxPath=scanner.nextLine().trim();
-				firefoxPath=firefoxPath.replace("\\", "/");
-				if(firefoxPath.matches(reg)){
-					try{
-						paramsMap.put(ConstantValue.KEY_FIREFOX_PATH, firefoxPath);
-						WebDriverUtils.getWebDriver();
-					}catch(Exception e){
-						System.out.println("Specified firefox binary location does not exist or is not a real file: "+firefoxPath);
-						continue;
-					}
-					System.out.println("已经保存路径，下次无需再输了");
-					break;
-				}else{
-					System.out.println("输入路径有误重新输入");
-				}
+		}
+		return isFileExist;
+	}
+	public boolean createConfFile(String params){
+		String reg="(^//.|^/|^[a-zA-Z])?:?/.+(/$)?";
+		params=params.trim().replace("\\", "/");
+		if(params.matches(reg)){
+			try{
+				paramsMap.put(ConstantValue.KEY_FIREFOX_PATH, params);
+				WebDriverUtils.getWebDriver();
+			}catch(Exception e){
+				System.out.println("Specified firefox binary location does not exist or is not a real file: "+params);
+				return false;
 			}
+			System.out.println("已经保存路径，下次无需再输了");
+			return true;
 		}else{
+			System.out.println("输入路径有误重新输入");
+			return false;
+		}
+	}
+	public boolean readConfFile() throws Exception {
+		try{
 			FileInputStream in = new FileInputStream(ConstantValue.CONFIGURATION_FILE_PATH);
 			Properties properties=new  Properties();
 			properties.load(in);
@@ -77,19 +80,16 @@ public class ConfigParams {
 	        }  
 			System.out.println("It had read the firefoxPath:  "+paramsMap.get(ConstantValue.KEY_FIREFOX_PATH));
 			in.close();
+		}catch(Exception e){
+			System.out.println("fail to read configuration ,at "+ConstantValue.BACKUP_FILE_PATH);
+			throw e;
 		}
-		typeInWebsiteParam();
+		return true;
 	}
-	
-	private void typeInWebsiteParam() throws Exception{
-		Scanner scanner=new Scanner(System.in);
-		System.out.println("type in the website, n for the historical lastest record");
-		while(scanner.hasNext()){
-			String websiteUrl=scanner.nextLine().trim();
-			if("".equals(websiteUrl)){
-				continue;
-			}
-			//the latest website is useful
+
+	public boolean setWebsiteUrl(String websiteUrl){
+		//the latest website is useful
+		try{
 			if(true==typeInWebSiteConfiguration(websiteUrl)){
 				if(!"n".equals(websiteUrl)){
 					File file=new File(ConstantValue.CONFIGURATION_FILE_PATH);
@@ -100,12 +100,14 @@ public class ConfigParams {
 					}
 					properties.store(writeFile, "create configuration");
 					writeFile.close();
-					break;
-				}else{
-					break;
 				}
+				return true;
 			}
+		}catch(Exception e){
+			System.out.println("fail to save website ");
+			return false;
 		}
+		return false;
 	}
 	
 	/**
