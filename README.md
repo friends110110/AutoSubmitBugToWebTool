@@ -7,8 +7,11 @@ At first, we entered into the website,
 secondly, the tool could help us to fetch some useful information ,and save it into excel file.We could edit the file.
 
 Last but not least,we could commit the necessary information to the url which we fetch from the website.
+There are a lot of problems ,following:
+![image](/pics/0.png)
 
-before: there are too much steps we should do.following:
+before: 
+if you want to solve a problem, there are too many steps to do.following:
 ![image](/pics/1.png)
 ![image](/pics/2.png)
 ![image](/pics/3.png)
@@ -17,7 +20,6 @@ before: there are too much steps we should do.following:
 it takes too much time to solve a problem.
 
 after use this tool:
-
 
   it could help us to get all the bugs description from the bugs system url ,and create a bugs.xlxs file. following:
   
