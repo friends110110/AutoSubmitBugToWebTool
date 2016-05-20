@@ -44,9 +44,9 @@ public class CommitDataSetToUrlModel {
 		public void call(ArrayList<String> list) {
 			try {
 				callProgram(list);
-			} catch (NoSuchElementException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
-				throw e;
+				//throw e;
 			}
 			System.out.println(list.toString() +"  has successfully been submited ");
 			contentLists.remove(list);
@@ -54,7 +54,16 @@ public class CommitDataSetToUrlModel {
 	});
 //	  WebDriverUtils.closeWebDriver();
   }
-  public void callProgram(ArrayList<String> list){
+  public void callProgramToSubmit(ArrayList<ArrayList<String>> lists )throws Exception{
+	  for (int i=0;i<lists.size();i++){
+		  ArrayList<String> list=lists.get(i);
+		  callProgram(list);
+		  lists.remove(0);
+		  i--;
+	  }
+  }
+  
+  public void callProgram(ArrayList<String> list)throws Exception{
 	  String problemUrl=list.get(0);
 	  //  list.get(1)   description  is just message
 	  String result=list.get(2);
@@ -73,13 +82,13 @@ public class CommitDataSetToUrlModel {
  * @param comment
  */
   public void callProgram(String problemUrl,String result,String solution,String comment,
-		  String assignUser,String assignComment) {
+		  String assignUser,String assignComment) throws Exception{
 	    if(null==result||"".equals(result)){
 	    	result="解决(修复成功)";
 	    }	
 	    driver.get(problemUrl);
-	    try{
-		    driver.findElement(By.id("action_id_721")).click();
+	    try{	//if the problem has been assigned, (ps: 分配 button has disappeared,and next page is decide to solve problem or reject)
+	    	driver.findElement(By.id("action_id_721")).click();
 		    if(null!=assignComment&&!"".equals(assignComment)){
 		    	driver.findElement(By.id("comment")).clear();
 		    	driver.findElement(By.id("comment")).sendKeys(assignComment);
@@ -87,12 +96,17 @@ public class CommitDataSetToUrlModel {
 		    //it is the Chinese name
 		    String regex = "[\u4E00-\u9FA5]+";
 		    if(null!=assignUser&&!"".equals(assignUser)&&assignUser.matches(regex)){
-		    	new Select(driver.findElement(By.id("assignee"))).selectByVisibleText(assignUser);
-			    driver.findElement(By.id("分配任务")).click();
-			    return;
+		    	try{
+		    		new Select(driver.findElement(By.id("assignee"))).selectByVisibleText(assignUser);
+		    	}catch(Exception e){
+			    	System.out.println("please correct the assignUser, cant not find the assignUser" +assignUser);
+			    	throw new Exception("please correct the assignUser");
+		    	}
 		    }
-		    driver.findElement(By.id("分配任务")).click();
-	    }catch(Exception e){
+		    //assign task to any others, so do not care about it after.
+		    driver.findElement(By.id("分配任务")).click();	
+		    return;
+	    }catch(NoSuchElementException e){ //if the problem has been assigned, (ps: 分配 button has disappeared,and next page is decide to solve problem or reject)
 	    	String problemId=problemUrl.substring(problemUrl.lastIndexOf("/"),problemUrl.length());
 	    	System.out.println(problemId+"  this task has been assigned, now solve it directly");
 	    }
@@ -106,7 +120,6 @@ public class CommitDataSetToUrlModel {
 	    driver.findElement(By.id("comment")).clear();
 	    driver.findElement(By.id("comment")).sendKeys(""+comment);
 	    driver.findElement(By.id("解决缺陷")).click();
-	  
   }
 
   @Test

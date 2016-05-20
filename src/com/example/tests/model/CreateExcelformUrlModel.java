@@ -183,26 +183,16 @@ public class CreateExcelformUrlModel {
 		}
 		return true;
 	}
-	 public void deleteExcelFile(){
+	 public boolean deleteExcelFile(){
 		 File file=new File(ConstantValue.BACKUP_FILE_PATH);
 		 if(file.exists()){
 			 if(false==file.delete()){
 				 System.out.println("please close file at  " +ConstantValue.BACKUP_FILE_PATH);
-				 System.out.println(" type in y to continue .....");
-				 Scanner scanner=new Scanner(System.in);
-				 while(scanner.hasNext()){
-						String isContinue=scanner.nextLine();
-						if("y".equals(isContinue)){
-							if(false==file.delete()){
-								 System.out.println(" you must not close this file ,fuck .....");
-								 continue;
-							}
-							break;
-						}
-					}
+				 return false;
 			 }
 			 System.out.println("success to delete this file ,and will restore this file");
 		 }
+		 return true;
 	 }
 	    /**
 	     * 读取excel文件内容

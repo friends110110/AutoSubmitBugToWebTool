@@ -12,7 +12,9 @@ import com.example.tests.model.CreateExcelformUrlModel;
 import com.example.tests.tool.ConstantValue;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
 public class FieldServiceImpl {
 	CreateExcelformUrlModel createExcelformUrlModel;
@@ -38,32 +40,26 @@ public class FieldServiceImpl {
 	public FieldSets parseExcelToDataSet(){
 		return createExcelformUrlModel.parseExcelToDataSets(ConstantValue.BACKUP_FILE_PATH);
 	}
-	
-	public void commitDataSetToUrl(final FieldSets fieldSet) throws Exception{
+	public boolean restoreExcelFile(FieldSets fieldSet){
+		boolean isDel=createExcelformUrlModel.deleteExcelFile();
+		if(false==isDel){
+			return isDel;
+		}
+		createExcelformUrlModel.createExcel(ConstantValue.BACKUP_FILE_PATH, fieldSet);
+		return true;
+	}
+	public boolean commitDataSetToUrl(final FieldSets fieldSet) throws Exception{
 		  final ArrayList<ArrayList<String>> contentLists=fieldSet.contentList;
 		  if(contentLists.size()<=0){
-			  return ;
+			  return true;
 		  }
-		  final ArrayList<ArrayList<String>> delContentLists=new ArrayList<ArrayList<String>>();
-		  Observable.from(contentLists).subscribe(new Action1<ArrayList<String>>() {
-				@Override
-				public void call(ArrayList<String> list) {
-						try {
-							commitExcelToUrlModel.callProgram(list);
-						} catch (NoSuchElementException e) {
-							System.out.println("the left data has some errors,please correct it.");
-							//the left data has not submit to the url
-							contentLists.removeAll(delContentLists);
-							createExcelformUrlModel.deleteExcelFile();
-							createExcelformUrlModel.createExcel(ConstantValue.BACKUP_FILE_PATH, fieldSet);
-//							e.printStackTrace();
-							return;
-						}
-						System.out.println(list.toString() +"  has successfully been submited ");
-						delContentLists.add(list);
-				}
-			});
-			contentLists.removeAll(delContentLists);
+		  try{
+			  commitExcelToUrlModel.callProgramToSubmit(contentLists);
+		  }catch(Exception e){
+				System.out.println("the left data has some errors,please correct it.(ps: assign to somebody who is not exist)");
+				return restoreExcelFile(fieldSet);
+		  }
+		  return true;
 	}
 	public void removeCells(FieldSets fieldSets,Integer... cells){
 		createExcelformUrlModel.removeCells(fieldSets, cells);

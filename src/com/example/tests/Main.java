@@ -72,6 +72,7 @@ public class Main {
 		fileTool.createExcel(ConstantValue.BACKUP_FILE_PATH, fieldSet);
 	}
 	
+	@SuppressWarnings("resource")
 	public static void main(String[] args) throws Exception{
 		Scanner scanner=new Scanner(System.in);
 		String params;
@@ -90,23 +91,48 @@ public class Main {
 		while(scanner.hasNext()){
 			params=scanner.nextLine(); 
 			if(true==paramsMap.setWebsiteUrl(params)){
-				System.out.println("文件保存成功");
+				System.out.println("success to save file");
 				break;
 			}
 		}
 		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
-		if(true==fieldServiceImpl.createExcelFromUrl(paramsMap.getValue(ConstantValue.KEY_WEBSITE))){
-			 System.out.println("please modify the information at  "+ConstantValue.BACKUP_FILE_PATH);
-			 System.out.println("请修改文件，修改完毕后，务必要保存哦，最好关闭文件！然后输入 y 继续...");
-		}else{
-			 System.out.println("fail to create excel");
-		}
-		while(scanner.hasNext()){
-			String isContinueFlag=scanner.nextLine();
-			if("y".equals(isContinueFlag)){
+//		if(true==fieldServiceImpl.createExcelFromUrl(paramsMap.getValue(ConstantValue.KEY_WEBSITE))){
+//			 System.out.println("please modify the information at  "+ConstantValue.BACKUP_FILE_PATH);
+//			 System.out.println("请修改文件，修改完毕后，务必要保存哦，最好关闭文件！然后输入 y 继续...");
+//		}else{
+//			 System.out.println("fail to create excel");
+//			 throw new Exception("fail to create excel");
+//		}
+//		while(scanner.hasNext()){
+//			String isContinueFlag=scanner.nextLine();
+//			if("y".equals(isContinueFlag)){
+//				break;
+//			}
+//		}
+		while(true){
+			FieldSets fieldSets=fieldServiceImpl.parseExcelToDataSet();
+			//fieldServiceImpl.removeCells(fieldSets, ConstantValue.DELETE_CELLS_NUMBER);
+			boolean isAllDataSubmit=fieldServiceImpl.commitDataSetToUrl(fieldSets);
+			if(true==isAllDataSubmit){
 				break;
 			}
+			System.out.println(" type in y to continue .....");
+			while(scanner.hasNext()){
+				String isContinueFlag=scanner.nextLine();
+				if("y".equals(isContinueFlag)){
+					if(true==fieldServiceImpl.restoreExcelFile(fieldSets)){
+						break;
+					}
+				}
+			}
 		}
+		scanner.close();
+	}
+	@Test
+	public void myTest() throws Exception{
+		Scanner scanner=new Scanner(System.in);
+		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
+
 		while(true){
 			FieldSets fieldSets=fieldServiceImpl.parseExcelToDataSet();
 			//fieldServiceImpl.removeCells(fieldSets, ConstantValue.DELETE_CELLS_NUMBER);
@@ -114,10 +140,17 @@ public class Main {
 			if(fieldSets.contentList.size()==0){
 				break;
 			}
+			System.out.println(" type in y to continue .....");
+			while(scanner.hasNext()){
+				String isContinueFlag=scanner.nextLine();
+				if("y".equals(isContinueFlag)){
+					if(true==fieldServiceImpl.restoreExcelFile(fieldSets)){
+						break;
+					}
+				}
+			}
 		}
-		scanner.close();
 	}
-	
 	@Test
 	public void testData(){
 		CreateExcelformUrlModel fileTool=new CreateExcelformUrlModel(); 
@@ -135,10 +168,10 @@ public class Main {
 //		}
 		
 		
-		FieldSets fieldSets=fileTool.parseExcelToDataSets(ConstantValue.BACKUP_FILE_PATH);
-		fileTool.deleteExcelFile();
-		boolean is=fileTool.createExcel(ConstantValue.BACKUP_FILE_PATH, fieldSets);
-		System.out.println(is);
+//		FieldSets fieldSets=fileTool.parseExcelToDataSets(ConstantValue.BACKUP_FILE_PATH);
+//		fileTool.deleteExcelFile();
+//		boolean is=fileTool.createExcel(ConstantValue.BACKUP_FILE_PATH, fieldSets);
+//		System.out.println(is);
 	}
 
 }
