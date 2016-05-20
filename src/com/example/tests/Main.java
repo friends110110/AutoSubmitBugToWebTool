@@ -76,7 +76,19 @@ public class Main {
 		ConfigParams paramsMap=ConfigParams.getInstance();
 		paramsMap.initParams();
 		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
-		fieldServiceImpl.createExcelFromUrl(paramsMap.getValue(ConstantValue.KEY_WEBSITE));
+		if(true==fieldServiceImpl.createExcelFromUrl(paramsMap.getValue(ConstantValue.KEY_WEBSITE))){
+			 System.out.println("please modify the information at  "+ConstantValue.BACKUP_FILE_PATH);
+			 System.out.println("请修改文件，修改完毕后，务必要保存哦，最好关闭文件！然后输入 y 继续...");
+		}else{
+			 System.out.println("fail to create excel");
+		}
+		Scanner scanner=new Scanner(System.in);
+		while(scanner.hasNext()){
+			String isContinueFlag=scanner.nextLine();
+			if("y".equals(isContinueFlag)){
+				break;
+			}
+		}
 		while(true){
 			FieldSets fieldSets=fieldServiceImpl.parseExcelToDataSet();
 			//fieldServiceImpl.removeCells(fieldSets, ConstantValue.DELETE_CELLS_NUMBER);

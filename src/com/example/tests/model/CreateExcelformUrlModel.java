@@ -177,15 +177,6 @@ public class CreateExcelformUrlModel {
 	        workBook.write(os);// 将文档对象写入文件输出流  
 		    os.close();// 关闭文件输出流  
 		    System.out.println("创建成功 office 2007 excel");  
-			System.out.println("please modify the information at  "+ConstantValue.BACKUP_FILE_PATH);
-			System.out.println("请修改文件，修改完毕后，务必要保存哦，最好关闭文件！然后输入 y 继续...");
-			Scanner scanner=new Scanner(System.in);
-			while(scanner.hasNext()){
-				String isContinue=scanner.nextLine();
-				if("y".equals(isContinue)){
-					break;
-				}
-		}
 		}catch(Exception e){
 			e.printStackTrace();
 			return false;
