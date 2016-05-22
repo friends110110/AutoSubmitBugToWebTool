@@ -119,13 +119,13 @@ public class ConfigParams {
     	 try{
 	    	 boolean isUrl=param.matches("(http|ftp|https):\\/\\/([\\w.]+\\/?)\\S*");
 	    	 if("n".equals(param)){
-	    		 String websiteUrl=paramsMap.get(ConstantValue.KEY_WEBSITE);
+	    		 String websiteUrl=paramsMap.get(ConstantValue.KEY_WEBSITE_URL);
 	    		 if(websiteUrl==null||!websiteUrl.matches("(http|ftp|https):\\/\\/([\\w.]+\\/?)\\S*")){
 	    			 System.out.println("the latest website url has mistaken");
 	    			 return false;
 	    		 }
 			 }else if(true==isUrl){
-	    		 paramsMap.put(ConstantValue.KEY_WEBSITE, param);
+	    		 paramsMap.put(ConstantValue.KEY_WEBSITE_URL, param);
 			 }else{
 	    		 System.out.println("the website you typed in has mistakes,type in again");
 	    		 return false;
