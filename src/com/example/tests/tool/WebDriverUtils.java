@@ -29,11 +29,14 @@ public class WebDriverUtils {
 			 FirefoxProfile firefoxPro = new FirefoxProfile();   
 			 driver = new FirefoxDriver(Binary,firefoxPro);  
 		     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-			 
+		     setImplicitlyWaitSeconds(30);
 		}
 		return driver;
 	}
 	
+	public static void setImplicitlyWaitSeconds(int seconds){
+	     driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
+	}
 	  public static void closeWebDriver() throws Exception {
 	    driver.quit();
 //	    String verificationErrorString = verificationErrors.toString();
