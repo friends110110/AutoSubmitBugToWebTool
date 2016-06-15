@@ -151,6 +151,7 @@ public class Main {
 				}
 			}
 		}
+		System.out.println("thank you ,good bye! ");
 	}
 	@Test
 	public void testData(){

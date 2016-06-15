@@ -103,10 +103,11 @@ public class CommitDataSetToUrlModel {
 			    	System.out.println("please correct the assignUser, cant not find the assignUser" +assignUser);
 			    	throw new Exception("please correct the assignUser");
 		    	}
+		    	//assign task to any others, so do not care about it after.
+			    driver.findElement(By.id("分配任务")).click();	
+			    return;
 		    }
-		    //assign task to any others, so do not care about it after.
 		    driver.findElement(By.id("分配任务")).click();	
-		    return;
 	    }catch(NoSuchElementException e){ //if the problem has been assigned, (ps: 分配 button has disappeared,and next page is decide to solve problem or reject)
 	    	String problemId=problemUrl.substring(problemUrl.lastIndexOf("/"),problemUrl.length());
 	    	System.out.println(problemId+"  this task has been assigned, now solve it directly");
