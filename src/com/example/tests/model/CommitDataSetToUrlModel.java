@@ -88,7 +88,7 @@ public class CommitDataSetToUrlModel {
 	    }	
 	    driver.get(problemUrl);
 	    try{	//if the problem has been assigned, (ps: 分配 button has disappeared,and next page is decide to solve problem or reject)
-	    	WebDriverUtils.setImplicitlyWaitSeconds(5);	//set outTime
+	    	WebDriverUtils.setImplicitlyWaitSeconds(10);	//set outTime
 	    	driver.findElement(By.id("action_id_721")).click();
 		    if(null!=assignComment&&!"".equals(assignComment)){
 		    	driver.findElement(By.id("comment")).clear();

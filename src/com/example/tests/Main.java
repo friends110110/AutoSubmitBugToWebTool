@@ -94,6 +94,7 @@ public class Main {
 				System.out.println("success to save file");
 				break;
 			}
+			System.out.println("type in the website, n for the historical lastest record");
 		}
 		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
 		if(true==fieldServiceImpl.createExcelFromUrl(paramsMap.getValue(ConstantValue.KEY_WEBSITE_URL))){
