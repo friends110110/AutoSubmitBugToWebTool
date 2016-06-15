@@ -31,13 +31,13 @@ public class Main {
 		ArrayList<ArrayList<String>> data =new ArrayList<ArrayList<String>> ();
 		for(int i=0;i<5;i++){
 			ArrayList<String> str=new ArrayList<String>();
-			for(int j=0;j<3;j++){
+			for(int j=0;j<7;j++){
 				str.add(i+"  "+String.valueOf(j)+"安抚安抚安抚安抚安抚萨芬的安抚安抚暗室逢灯安抚暗室逢灯暗室逢灯安抚安抚安抚阿斯蒂芬萨芬的昂视发");
 			}
 			data.add(str);
 		}
 		FieldSets fieldSet=new FieldSets();
-		String []titles={"problem_id","description","solution","comment"};
+		String []titles={"problem_id","description","solution","comment","5","6","7"};
 		ArrayList<String> titleList=new ArrayList(Arrays.asList(titles));
 		fieldSet.titleList=titleList;
 		fieldSet.contentList=data;

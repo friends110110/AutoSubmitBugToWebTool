@@ -9,7 +9,7 @@ public class ConstantValue {
 	public static String BACKUP_FILE_PATH="bugs.xlsx";
 	public static int DELETE_CELLS_NUMBER=1;
 	public static String CONFIGURATION_FILE_PATH="configuration.properties";
-
+	public static int CHARNUMSSECONDSCell=20;//the first cell contains 20 char nums
 
 
 }

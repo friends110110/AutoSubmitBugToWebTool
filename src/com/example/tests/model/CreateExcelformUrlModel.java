@@ -149,8 +149,11 @@ public class CreateExcelformUrlModel {
 						public void call(Integer rowIndex) {
 					    	row = sheet.createRow(rowIndex);
 					    	//row.setHeightInPoints(23);
+					    	
+					    	
+					    	
 					    	//增加单元格的高度 以能够容纳2行字   
-					    	row.setHeightInPoints(2*sheet.getDefaultRowHeightInPoints());  
+					    	//row.setHeightInPoints(2*sheet.getDefaultRowHeightInPoints());  
 							if(0==rowIndex){
 								rowSubscribe.onNext(titleList);
 							}else{
@@ -168,6 +171,10 @@ public class CreateExcelformUrlModel {
 							XSSFCell cell = row.createCell(index);// 创建单元格  
 			    	        cell.setCellValue(list.get(index));// 写入当前日期  
 			    	        cell.setCellStyle(style);
+			    	        if(index==1){
+			    	        	float height=getExcelCellAutoHeight(list.get(1),ConstantValue.CHARNUMSSECONDSCell);
+			    	        	row.setHeightInPoints(height);
+			    	        }
 						}
 					});
 				}
@@ -342,5 +349,37 @@ public class CreateExcelformUrlModel {
 	        }
 	    }
 	
+	    private float getExcelCellAutoHeight(String str, float fontCountInline) {
+	        float defaultRowHeight = 15.00f;//每一行的高度指定
+	        float defaultCount = 0.00f;
+	        for (int i = 0; i < str.length(); i++) {
+	            float ff = getregex(str.substring(i, i + 1));
+	            defaultCount = defaultCount + ff;
+	        }
+	        return ((int) (defaultCount / fontCountInline) + 1) * defaultRowHeight;//计算
+	    }
+
+	    private static float getregex(String charStr) {
+	        
+	        if(charStr==" ")
+	        {
+	            return 0.5f;
+	        }
+	        // 判断是否为字母或字符
+	        if (Pattern.compile("^[A-Za-z0-9]+$").matcher(charStr).matches()) {
+	            return 0.5f;
+	        }
+	        // 判断是否为全角
+
+	        if (Pattern.compile("[\u4e00-\u9fa5]+$").matcher(charStr).matches()) {
+	            return 1.00f;
+	        }
+	        //全角符号 及中文
+	        if (Pattern.compile("[^x00-xff]").matcher(charStr).matches()) {
+	            return 1.00f;
+	        }
+	        return 0.5f;
+
+	    }
 
 }
