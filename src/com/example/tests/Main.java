@@ -128,6 +128,7 @@ public class Main {
 			}
 		}
 		scanner.close();
+		System.out.println("thank you ,good bye! ");
 	}
 	@Test
 	public void myTest() throws Exception{
