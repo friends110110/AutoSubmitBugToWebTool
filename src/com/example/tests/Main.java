@@ -157,7 +157,15 @@ public class Main {
 	@Test
 	public void testData(){
 		CreateExcelformUrlModel fileTool=new CreateExcelformUrlModel(); 
-//		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
+		ConfigParams paramsMap=ConfigParams.getInstance();
+		paramsMap.setWebsiteUrl("http://se.hundsun.com/dm/secure/IssueNavigator.jspa?reset=true&mode=hide&pid=20110908&assigneeSelect=issue_current_user&resolution=6&component=13356");
+		try {
+			paramsMap.readConfFile();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
 //		FieldSets fieldSets=fieldServiceImpl.parseExcelToDataSet();
 //		fieldServiceImpl.removeCells(fieldSets, ConstantValue.deleteCellsNumber);
 		//FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();

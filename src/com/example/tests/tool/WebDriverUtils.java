@@ -28,8 +28,8 @@ public class WebDriverUtils {
 			 FirefoxBinary Binary = new FirefoxBinary(pathBinary);
 			 FirefoxProfile firefoxPro = new FirefoxProfile();   
 			 driver = new FirefoxDriver(Binary,firefoxPro);  
-		     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-		     setImplicitlyWaitSeconds(30);
+		     driver.manage().timeouts().implicitlyWait(ConstantValue.TIMEOUT_SECONDS, TimeUnit.SECONDS);
+		     setImplicitlyWaitSeconds(ConstantValue.TIMEOUT_SECONDS);
 		}
 		return driver;
 	}

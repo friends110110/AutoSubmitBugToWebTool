@@ -74,9 +74,18 @@ public class CreateExcelformUrlModel {
 	 public FieldSets getDataFromUrl(String url){
 		 FieldSets fieldSets=new FieldSets();
 		 WebDriver webDriver=WebDriverUtils.getWebDriver();
-		 System.out.println("please login in the foxfire ,and wait for a moment");
+		 System.out.println("please login in the foxfire,30 seconds ,and wait for a moment");
 	     webDriver.get(url);
-	     WebElement webElement=webDriver.findElement(By.xpath("//td[@class='nav summary']"));
+	     WebElement webElement;
+	     boolean isLogin=false;
+	     while(!isLogin){
+		     try{
+		    	 webElement=webDriver.findElement(By.xpath("//td[@class='nav summary']"));
+		    	 isLogin=true;
+		     }catch(Exception e){
+		    	 System.out.println("please login ,do not waste of time");
+		     }
+	     }
 	     List<WebElement> webElementLists = webDriver.findElements(By.xpath(("//td[@class='nav summary']/a")));  
 	     final ArrayList<ArrayList<String>> contentList=new ArrayList<ArrayList<String>>();
 		 System.out.println("fetch data from website:  "+ url);

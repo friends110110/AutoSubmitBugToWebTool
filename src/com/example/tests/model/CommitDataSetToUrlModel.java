@@ -16,6 +16,7 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.support.ui.Select;
 
 import com.example.tests.bean.FieldSets;
+import com.example.tests.tool.ConstantValue;
 import com.example.tests.tool.WebDriverUtils;
 
 import rx.Observable;
@@ -88,7 +89,7 @@ public class CommitDataSetToUrlModel {
 	    }	
 	    driver.get(problemUrl);
 	    try{	//if the problem has been assigned, (ps: 分配 button has disappeared,and next page is decide to solve problem or reject)
-	    	WebDriverUtils.setImplicitlyWaitSeconds(10);	//set outTime
+	    	WebDriverUtils.setImplicitlyWaitSeconds(ConstantValue.TIMEOUT_SECONDS/2);	//set outTime
 	    	driver.findElement(By.id("action_id_721")).click();
 		    if(null!=assignComment&&!"".equals(assignComment)){
 		    	driver.findElement(By.id("comment")).clear();
@@ -112,7 +113,7 @@ public class CommitDataSetToUrlModel {
 	    	String problemId=problemUrl.substring(problemUrl.lastIndexOf("/"),problemUrl.length());
 	    	System.out.println(problemId+"  this task has been assigned, now solve it directly");
 	    }
-    	WebDriverUtils.setImplicitlyWaitSeconds(30);	//set outTime
+    	WebDriverUtils.setImplicitlyWaitSeconds(ConstantValue.TIMEOUT_SECONDS);	//set outTime
 	    //mock operation click to solve bug
 	    driver.findElement(By.id("action_id_751")).click();
 	    new Select(driver.findElement(By.id("resolution"))).selectByVisibleText(result);
