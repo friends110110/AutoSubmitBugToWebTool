@@ -128,6 +128,7 @@ public class Main {
 			}
 		}
 		scanner.close();
+		fieldServiceImpl.deleteExcelFile();
 		System.out.println("thank you ,good bye! ");
 	}
 	@Test

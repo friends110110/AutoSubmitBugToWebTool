@@ -117,6 +117,7 @@ public class CreateExcelformUrlModel {
 		final ArrayList<String> titleList=fieldSets.titleList;
 		// TODO Auto-generated method stub
 		// HSSFWorkbook workBook = new HSSFWorkbook();// 创建 一个excel文档对象  
+   	 	System.out.println("please wait for a moment, it is creating bugs.xlsx file");
 		try{
 	        XSSFWorkbook workBook = new XSSFWorkbook();  
 	        final XSSFSheet sheet = workBook.createSheet();// 创建一个工作薄对象  
@@ -158,9 +159,6 @@ public class CreateExcelformUrlModel {
 						public void call(Integer rowIndex) {
 					    	row = sheet.createRow(rowIndex);
 					    	//row.setHeightInPoints(23);
-					    	
-					    	
-					    	
 					    	//增加单元格的高度 以能够容纳2行字   
 					    	//row.setHeightInPoints(2*sheet.getDefaultRowHeightInPoints());  
 							if(0==rowIndex){
@@ -192,7 +190,9 @@ public class CreateExcelformUrlModel {
 	        FileOutputStream os = new FileOutputStream(createPath);  
 	        workBook.write(os);// 将文档对象写入文件输出流  
 		    os.close();// 关闭文件输出流  
-		    System.out.println("创建成功 office 2007 excel");  
+		    System.out.println("success to create bugs.xlsx,and open  bugs.xlsx file");  
+            Runtime.getRuntime().exec("cmd  /c  start  "+createPath);  
+
 		}catch(Exception e){
 			e.printStackTrace();
 			return false;
@@ -206,7 +206,7 @@ public class CreateExcelformUrlModel {
 				 System.out.println("please close file at  " +ConstantValue.BACKUP_FILE_PATH);
 				 return false;
 			 }
-			 System.out.println("success to delete this file ,and will restore this file");
+			 System.out.println("success to delete "+ConstantValue.BACKUP_FILE_PATH+" file ");
 		 }
 		 return true;
 	 }
@@ -230,6 +230,7 @@ public class CreateExcelformUrlModel {
             if (sheet == null) {
                 return null;
             }
+            System.out.println("show the data which submit");
             System.out.println("=======================" + sheet.getSheetName() + "=========================");
             
             Observable.create(new OnSubscribe<Row>(){

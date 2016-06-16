@@ -45,9 +45,18 @@ public class FieldServiceImpl {
 		if(false==isDel){
 			return isDel;
 		}
+		System.out.println("it will restore this file");
 		createExcelformUrlModel.createExcel(ConstantValue.BACKUP_FILE_PATH, fieldSet);
 		return true;
 	}
+	public void deleteExcelFile(){
+		boolean isDel=false;
+		while(false==isDel){
+			isDel=createExcelformUrlModel.deleteExcelFile();
+		}
+	}
+
+	
 	public boolean commitDataSetToUrl(final FieldSets fieldSet) throws Exception{
 		  final ArrayList<ArrayList<String>> contentLists=fieldSet.contentList;
 		  if(contentLists.size()<=0){
