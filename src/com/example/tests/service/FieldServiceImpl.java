@@ -53,6 +53,12 @@ public class FieldServiceImpl {
 		boolean isDel=false;
 		while(false==isDel){
 			isDel=createExcelformUrlModel.deleteExcelFile();
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
