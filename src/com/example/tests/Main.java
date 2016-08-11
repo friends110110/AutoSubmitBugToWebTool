@@ -87,26 +87,33 @@ public class Main {
 		}else{
 			paramsMap.readConfFile();
 		}
-		System.out.println("type in the website, n for the historical lastest record");
-		while(scanner.hasNext()){
-			params=scanner.nextLine(); 
-			if(true==paramsMap.setWebsiteUrl(params)){
-				System.out.println("success to save file");
-				break;
-			}
-			System.out.println("type in the website, n for the historical lastest record");
-		}
 		FieldServiceImpl fieldServiceImpl=new FieldServiceImpl();
-		if(true==fieldServiceImpl.createExcelFromUrl(paramsMap.getValue(ConstantValue.KEY_WEBSITE_URL))){
-			 System.out.println("please modify the information at  "+ConstantValue.BACKUP_FILE_PATH);
-			 System.out.println("请修改文件，修改完毕后，务必要保存哦，最好关闭文件！然后输入 y 继续...");
+		if(!fieldServiceImpl.isExistenceFile(ConstantValue.BACKUP_FILE_PATH)){
+			System.out.println("type in the website, n for the historical lastest record");
+			while(scanner.hasNext()){
+				params=scanner.nextLine(); 
+				if(true==paramsMap.setWebsiteUrl(params)){
+					System.out.println("success to save file");
+					break;
+				}
+				System.out.println("type in the website, n for the historical lastest record");
+			}
+			if(true==fieldServiceImpl.createExcelFromUrl(paramsMap.getValue(ConstantValue.KEY_WEBSITE_URL))){
+				 System.out.println("please modify the information at  "+ConstantValue.BACKUP_FILE_PATH);
+				 System.out.println("请修改文件，修改完毕后，务必要保存哦，最好关闭文件！然后输入 y 继续...");
+			}else{
+				 System.out.println("fail to create excel");
+				 throw new Exception("fail to create excel");
+			}
 		}else{
-			 System.out.println("fail to create excel");
-			 throw new Exception("fail to create excel");
+			System.out.println(ConstantValue.BACKUP_FILE_PATH +"  文件已经存在了");
+			System.out.println("请修改文件，修改完毕后，务必要保存哦，最好关闭文件！然后输入 y 继续...");
 		}
 		while(scanner.hasNext()){
 			String isContinueFlag=scanner.nextLine();
 			if("y".equals(isContinueFlag)){
+				//此时可能 session已经失效了，重新登录下
+				fieldServiceImpl.resetLogin(paramsMap.getValue(ConstantValue.KEY_WEBSITE_URL));
 				break;
 			}
 		}

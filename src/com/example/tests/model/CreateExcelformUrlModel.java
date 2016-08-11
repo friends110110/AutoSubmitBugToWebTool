@@ -64,7 +64,21 @@ public class CreateExcelformUrlModel {
      XSSFRow row =null;
 	 ConfigParams paramsMap=ConfigParams.getInstance();
 
-	
+	 //可能session已经失效了，重新保证登录
+	public void resetLogin(String url){
+		 WebDriver webDriver=WebDriverUtils.getWebDriver();
+	     webDriver.get(url);
+	     WebElement webElement;
+	     boolean isLogin=false;
+	     while(!isLogin){
+		     try{
+		    	 webElement=webDriver.findElement(By.xpath("//td[@class='nav summary']"));
+		    	 isLogin=true;
+		     }catch(Exception e){
+		    	 System.out.println("please login ,do not waste of time");
+		     }
+	     }
+	}
 	 /**
 	  * 根据url地址生成 xlsx表格，
 	  * problemId	description result	solution	comment
@@ -202,6 +216,7 @@ public class CreateExcelformUrlModel {
 	 public boolean deleteExcelFile(){
 		 File file=new File(ConstantValue.BACKUP_FILE_PATH);
 		 if(file.exists()){
+			 copyFile(ConstantValue.BACKUP_FILE_PATH,"backup.xlsx");
 			 if(false==file.delete()){
 				 System.out.println("please close file at  " +ConstantValue.BACKUP_FILE_PATH);
 				 return false;
@@ -210,12 +225,41 @@ public class CreateExcelformUrlModel {
 		 }
 		 return true;
 	 }
-	    /**
-	     * 读取excel文件内容
-	     * @param filePath
-	     * @throws FileNotFoundException
-	     * @throws FileFormatException
-	     */
+	 /** 
+	 * 复制单个文件 
+	 * @param oldPath String 原文件路径 如：c:/fqf.txt 
+	 * @param newPath String 复制后路径 如：f:/fqf.txt 
+	 * @return boolean 
+	 */ 
+	 public void copyFile(String oldPath, String newPath) { 
+		 try { 
+			 int bytesum = 0; 
+			 int byteread = 0; 
+			 File oldfile = new File(oldPath); 
+			 if (oldfile.exists()) { //文件存在时 
+				 InputStream inStream = new FileInputStream(oldPath); //读入原文件 
+				 FileOutputStream fs = new FileOutputStream(newPath); 
+				 byte[] buffer = new byte[1444]; 
+				 int length; 
+				 while ( (byteread = inStream.read(buffer)) != -1) { 
+					 bytesum += byteread; //字节数 文件大小 
+					 System.out.println(bytesum); 
+					 fs.write(buffer, 0, byteread); 
+				 } 
+			 inStream.close(); 
+			 } 
+		 } 
+		 catch (Exception e) { 
+			 System.out.println("复制单个文件操作出错"); 
+			 e.printStackTrace(); 
+		 } 
+	 } 
+    /**
+     * 读取excel文件内容
+     * @param filePath
+     * @throws FileNotFoundException
+     * @throws FileFormatException
+     */
 	public FieldSets parseExcelToDataSets(String filePath)  {
 			final FieldSets fieldSet=new FieldSets();
 	        // 获取workbook对象

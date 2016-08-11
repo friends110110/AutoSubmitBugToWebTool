@@ -1,5 +1,6 @@
 package com.example.tests.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -35,6 +36,18 @@ public class FieldServiceImpl {
 	public boolean createExcelFromUrl(String url){
 		 FieldSets fieldSets=createExcelformUrlModel.getDataFromUrl(url);
 		 return createExcelformUrlModel.createExcel(ConstantValue.BACKUP_FILE_PATH, fieldSets);
+	}
+	
+	public boolean isExistenceFile(String path){
+		File file=new File(path);
+		return file.exists();
+	}
+	/**
+	 * 万一失效了 重新登录下
+	 * @param url
+	 */
+	public void resetLogin(String url){
+		createExcelformUrlModel.resetLogin(url);
 	}
 	
 	public FieldSets parseExcelToDataSet(){

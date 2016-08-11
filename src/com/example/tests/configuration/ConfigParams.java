@@ -43,7 +43,7 @@ public class ConfigParams {
 		File file=new File(ConstantValue.CONFIGURATION_FILE_PATH);
 		boolean isFileExist= file.exists();
 		if(false == isFileExist){
-			System.out.println("本应用需要安装 firefox浏览器");
+			System.out.println("有些操作可能比较耗时，所以当您输入指令之后稍微等几秒。\n本应用需要安装 firefox浏览器");
 			System.out.println("please type in the firefox path: like D:/Program Files (x86)/Mozilla Firefox/firefox.exe");
 		}
 		return isFileExist;
