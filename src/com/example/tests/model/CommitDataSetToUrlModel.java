@@ -84,35 +84,31 @@ public class CommitDataSetToUrlModel {
  */
   public void callProgram(String problemUrl,String result,String solution,String comment,
 		  String assignUser,String assignComment) throws Exception{
+	    //it is the Chinese name
+	    String regex = "[\u4E00-\u9FA5]+";
 	    if(null==result||"".equals(result)){
 	    	result="解决(修复成功)";
 	    }	
 	    driver.get(problemUrl);
 	    try{	//if the problem has been assigned, (ps: 分配 button has disappeared,and next page is decide to solve problem or reject)
-	    	WebDriverUtils.setImplicitlyWaitSeconds(ConstantValue.TIMEOUT_SECONDS/2);	//set outTime
-	    	driver.findElement(By.id("action_id_721")).click();
-		    if(null!=assignComment&&!"".equals(assignComment)){
+    		if(null!=assignUser&&!"".equals(assignUser)&&assignUser.matches(regex)){
+    			WebDriverUtils.setImplicitlyWaitSeconds(ConstantValue.TIMEOUT_SECONDS/2);	//set outTime
+    			driver.findElement(By.id("assign_issue")).click();
 		    	driver.findElement(By.id("comment")).clear();
 		    	driver.findElement(By.id("comment")).sendKeys(assignComment);
-		    }
-		    //it is the Chinese name
-		    String regex = "[\u4E00-\u9FA5]+";
-		    if(null!=assignUser&&!"".equals(assignUser)&&assignUser.matches(regex)){
 		    	try{
 		    		new Select(driver.findElement(By.id("assignee"))).selectByVisibleText(assignUser);
 		    	}catch(Exception e){
 			    	System.out.println("please correct the assignUser, cant not find the assignUser" +assignUser);
 			    	throw new Exception("please correct the assignUser");
-		    	}
-		    	//assign task to any others, so do not care about it after.
-			    driver.findElement(By.id("分配任务")).click();	
+		    	}	
+		    	driver.findElement(By.id("分配")).click();	
 			    return;
-		    }
-		    driver.findElement(By.id("分配任务")).click();	
-	    }catch(NoSuchElementException e){ //if the problem has been assigned, (ps: 分配 button has disappeared,and next page is decide to solve problem or reject)
-	    	String problemId=problemUrl.substring(problemUrl.lastIndexOf("/"),problemUrl.length());
-	    	System.out.println(problemId+"  this task has been assigned, now solve it directly");
-	    }
+    		}
+    	}catch(Exception e){
+    		System.out.println("分配了人，但是操作无效");
+    		return;
+    	}
     	WebDriverUtils.setImplicitlyWaitSeconds(ConstantValue.TIMEOUT_SECONDS);	//set outTime
 	    //mock operation click to solve bug
 	    driver.findElement(By.id("action_id_751")).click();
