@@ -106,7 +106,10 @@ public class Main {
 				 throw new Exception("fail to create excel");
 			}
 		}else{
-			System.out.println(ConstantValue.BACKUP_FILE_PATH +"  文件已经存在了");
+			System.out.println(ConstantValue.BACKUP_FILE_PATH +"  文件已经存在了,并且会打开");
+			fieldServiceImpl.resetLogin(paramsMap.getValue(ConstantValue.KEY_WEBSITE_URL));
+		    System.out.println("success to create bugs.xlsx,and open  bugs.xlsx file");  
+            Runtime.getRuntime().exec("cmd  /c  start  "+ConstantValue.BACKUP_FILE_PATH);  			
 			System.out.println("请修改文件，修改完毕后，务必要保存哦，最好关闭文件！然后输入 y 继续...");
 		}
 		while(scanner.hasNext()){
