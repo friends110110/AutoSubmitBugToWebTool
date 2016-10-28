@@ -26,7 +26,14 @@ public class WebDriverUtils {
 		if(null==driver){
 			 File pathBinary = new File(param.getValue(ConstantValue.KEY_FIREFOX_PATH));
 			 FirefoxBinary Binary = new FirefoxBinary(pathBinary);
-			 FirefoxProfile firefoxPro = new FirefoxProfile();   
+			 FirefoxProfile firefoxPro = new FirefoxProfile(); 
+			 
+		        //得到的是编译后的bin的目录Class.class.getClass().getResource("/").getPath();  
+			 String path=Class.class.getClass().getResource("/").getPath();
+			 System.out.println(path);
+			 System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
+			 //System.setProperty("webdriver.firefox.bin", param.getValue(ConstantValue.KEY_FIREFOX_PATH));
+
 			 driver = new FirefoxDriver(Binary,firefoxPro);  
 		     driver.manage().timeouts().implicitlyWait(ConstantValue.TIMEOUT_SECONDS, TimeUnit.SECONDS);
 		     setImplicitlyWaitSeconds(ConstantValue.TIMEOUT_SECONDS);

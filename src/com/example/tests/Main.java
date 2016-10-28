@@ -74,6 +74,7 @@ public class Main {
 	
 	@SuppressWarnings("resource")
 	public static void main(String[] args) throws Exception{
+		System.out.println("将资源文件中的geckodriver.exe拿出来和该文件同级");
 		Scanner scanner=new Scanner(System.in);
 		String params;
 		ConfigParams paramsMap=ConfigParams.getInstance();

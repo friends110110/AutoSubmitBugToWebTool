@@ -57,6 +57,7 @@ public class ConfigParams {
 				WebDriverUtils.getWebDriver();
 			}catch(Exception e){
 				System.out.println("Specified firefox binary location does not exist or is not a real file: "+params);
+				e.printStackTrace();
 				return false;
 			}
 			System.out.println("已经保存路径，下次无需再输了");
