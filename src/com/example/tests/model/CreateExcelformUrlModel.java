@@ -35,12 +35,14 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.xmlbeans.impl.piccolo.io.FileFormatException;
 import org.openqa.selenium.By;
+import org.openqa.selenium.By.ByName;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.support.ui.Select;
 
 import com.example.tests.bean.FieldSets;
 import com.example.tests.configuration.ConfigParams;
@@ -72,6 +74,14 @@ public class CreateExcelformUrlModel {
 	     boolean isLogin=false;
 	     while(!isLogin){
 		     try{
+		    	 ConfigParams params=ConfigParams.getInstance();
+		    	 String accountName=params.getValue("account_name");
+		    	 String password=params.getValue("password");
+		    	 webDriver.findElement(By.id("username")).sendKeys(accountName);
+		    	 webDriver.findElement(By.id("password")).sendKeys(password);
+		    	 if(password!=null&&!password.equals("")&&accountName!=null&&!accountName.equals("")){
+		    		 webDriver.findElement(ByName.name("submit")).click();
+		    	 }
 		    	 webElement=webDriver.findElement(By.xpath("//td[@class='nav summary']"));
 		    	 isLogin=true;
 		     }catch(Exception e){
