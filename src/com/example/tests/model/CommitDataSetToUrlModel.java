@@ -110,7 +110,16 @@ public class CommitDataSetToUrlModel {
     		return;
     	}
     	WebDriverUtils.setImplicitlyWaitSeconds(ConstantValue.TIMEOUT_SECONDS);	//set outTime
+
+	    //先分配给自己 再解决缺陷
+	    try{
+	    	driver.findElement(By.id("action_id_721")).click();
+	    	driver.findElement(By.id("分配任务")).click();	
+	    }catch(Exception e){
+	    	System.out.println("已经分配给自己了的，下面解决问题");
+	    }
 	    //mock operation click to solve bug
+    	//解决缺陷
 	    driver.findElement(By.id("action_id_751")).click();
 	    new Select(driver.findElement(By.id("resolution"))).selectByVisibleText(result);
 	    new Select(driver.findElement(By.id("customfield_10330"))).selectByVisibleText("其他");
