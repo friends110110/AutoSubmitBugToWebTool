@@ -77,7 +77,7 @@ public class CreateExcelformUrlModel {
 		    	 ConfigParams params=ConfigParams.getInstance();
 		    	 String accountName=params.getValue("account_name");
 		    	 String password=params.getValue("password");
-		    	 if(password!=null&&!password.equals("")&&accountName!=null&&!accountName.equals("")){
+		    	 if(accountName!=null&&!accountName.equals("")){
 		    		 try{
 		    			webDriver.findElement(By.id("username")).clear();
 		    		 	webDriver.findElement(By.id("username")).sendKeys(accountName);
@@ -85,15 +85,18 @@ public class CreateExcelformUrlModel {
 		    			 System.out.println("it has logined ... ");
 		    			 return;
 		    		 }
+		    	 }
+		    	 if(password!=null&&!password.equals("")){	 
 		    		 webDriver.findElement(By.id("password")).clear();
 			    	 webDriver.findElement(By.id("password")).sendKeys(password);
+			     }
+		    	 if(accountName!=null&&!accountName.equals("")&&password!=null&&!password.equals("")){
 		    		 webDriver.findElement(ByName.name("submit")).click();
 		    	 }
 		    	 webElement=webDriver.findElement(By.xpath("//td[@class='nav summary']"));
 		    	 isLogin=true;
 		     }catch(Exception e){// implicy 时间内没有操作，所以抛异常
 		    	 System.out.println("please login ,do not waste of time");
-		    	 return;
 		     }
 	     }
 	}
