@@ -73,6 +73,7 @@ public class CommitDataSetToUrlModel {
 	  String assignUser=list.get(5);
 	  String assignComment=list.get(6);
 	  callProgram(problemUrl,result,solution,comment,assignUser,assignComment);
+	  Thread.sleep(1000);
   }
   //solve one problem 
 /**
@@ -101,6 +102,7 @@ public class CommitDataSetToUrlModel {
 
 		    	}catch(Exception e){
 			    	System.out.println("please correct the assignUser, cant not find the assignUser" +assignUser);
+			    	e.printStackTrace();
 			    	throw new Exception("please correct the assignUser");
 		    	}	
 		    	driver.findElement(By.id("分配")).click();	
@@ -111,7 +113,6 @@ public class CommitDataSetToUrlModel {
     		System.out.println("分配了人，但是操作无效");
     		return;
     	}
-    	WebDriverUtils.setImplicitlyWaitSeconds(ConstantValue.TIMEOUT_SECONDS);	//set outTime
 	    if(null==result||"".equals(result)){
 	    	result="解决(修复成功)";
 	    }	
@@ -124,7 +125,9 @@ public class CommitDataSetToUrlModel {
 	    }
 	    //mock operation click to solve bug
     	//解决缺陷
+	    Thread.sleep(1000);
 	    driver.findElement(By.id("action_id_751")).click();
+	    Thread.sleep(1000);
 	    new Select(driver.findElement(By.id("resolution"))).selectByVisibleText(result);
 	    new Select(driver.findElement(By.id("customfield_10330"))).selectByVisibleText("其他");
 	    driver.findElement(By.id("customfield_10007")).clear();
