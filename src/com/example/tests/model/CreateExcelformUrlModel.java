@@ -71,32 +71,37 @@ public class CreateExcelformUrlModel {
 		 WebDriver webDriver=WebDriverUtils.getWebDriver();
 	     webDriver.get(url);
 	     WebElement webElement;
+    	 ConfigParams params=ConfigParams.getInstance();
+    	 String accountName=params.getValue("account_name");
+    	 String password=params.getValue("password");
 	     boolean isLogin=false;
+	     boolean isOnce=true;
 	     while(!isLogin){
 		     try{
-		    	 ConfigParams params=ConfigParams.getInstance();
-		    	 String accountName=params.getValue("account_name");
-		    	 String password=params.getValue("password");
-		    	 if(accountName!=null&&!accountName.equals("")){
-		    		 try{
-		    			webDriver.findElement(By.id("username")).clear();
-		    		 	webDriver.findElement(By.id("username")).sendKeys(accountName);
-		    		 }catch(Exception e){//找不到username元素，说明已经登录了的
-		    			 System.out.println("it has logined ... ");
-		    			 return;
-		    		 }
+		    	 if(isOnce){
+			    	 if(accountName!=null&&!accountName.equals("")){
+			    		 try{
+			    			webDriver.findElement(By.id("username")).clear();
+			    		 	webDriver.findElement(By.id("username")).sendKeys(accountName);
+			    		 }catch(Exception e){//找不到username元素，说明已经登录了的
+			    			 System.out.println("it has logined ... ");
+			    			 return;
+			    		 }
+			    	 }
+			    	 if(password!=null&&!password.equals("")){	 
+			    		 webDriver.findElement(By.id("password")).clear();
+				    	 webDriver.findElement(By.id("password")).sendKeys(password);
+				     }
+			    	 if(accountName!=null&&!accountName.equals("")&&password!=null&&!password.equals("")){
+			    		 webDriver.findElement(ByName.name("submit")).click();
+			    	 }
 		    	 }
-		    	 if(password!=null&&!password.equals("")){	 
-		    		 webDriver.findElement(By.id("password")).clear();
-			    	 webDriver.findElement(By.id("password")).sendKeys(password);
-			     }
-		    	 if(accountName!=null&&!accountName.equals("")&&password!=null&&!password.equals("")){
-		    		 webDriver.findElement(ByName.name("submit")).click();
-		    	 }
+		    	 //判断是否登录
 		    	 webElement=webDriver.findElement(By.xpath("//td[@class='nav summary']"));
 		    	 isLogin=true;
 		     }catch(Exception e){// implicy 时间内没有操作，所以抛异常
 		    	 System.out.println("please login ,do not waste of time");
+		    	 isOnce=false;
 		     }
 	     }
 	}
