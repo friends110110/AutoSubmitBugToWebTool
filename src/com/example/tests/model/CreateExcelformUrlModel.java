@@ -77,15 +77,23 @@ public class CreateExcelformUrlModel {
 		    	 ConfigParams params=ConfigParams.getInstance();
 		    	 String accountName=params.getValue("account_name");
 		    	 String password=params.getValue("password");
-		    	 webDriver.findElement(By.id("username")).sendKeys(accountName);
-		    	 webDriver.findElement(By.id("password")).sendKeys(password);
 		    	 if(password!=null&&!password.equals("")&&accountName!=null&&!accountName.equals("")){
+		    		 try{
+		    			webDriver.findElement(By.id("username")).clear();
+		    		 	webDriver.findElement(By.id("username")).sendKeys(accountName);
+		    		 }catch(Exception e){//找不到username元素，说明已经登录了的
+		    			 System.out.println("it has logined ... ");
+		    			 return;
+		    		 }
+		    		 webDriver.findElement(By.id("password")).clear();
+			    	 webDriver.findElement(By.id("password")).sendKeys(password);
 		    		 webDriver.findElement(ByName.name("submit")).click();
 		    	 }
 		    	 webElement=webDriver.findElement(By.xpath("//td[@class='nav summary']"));
 		    	 isLogin=true;
-		     }catch(Exception e){
+		     }catch(Exception e){// implicy 时间内没有操作，所以抛异常
 		    	 System.out.println("please login ,do not waste of time");
+		    	 return;
 		     }
 	     }
 	}
