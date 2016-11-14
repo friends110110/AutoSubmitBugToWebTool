@@ -86,23 +86,25 @@ public class CommitDataSetToUrlModel {
 		  String assignUser,String assignComment) throws Exception{
 	    //it is the Chinese name
 	    String regex = "[\u4E00-\u9FA5]+";
-	    if(null==result||"".equals(result)){
-	    	result="解决(修复成功)";
-	    }	
+		WebDriverUtils.setImplicitlyWaitSeconds(ConstantValue.TIMEOUT_SECONDS);	//set outTime
 	    driver.get(problemUrl);
+	    System.out.println("now solve the website:---->"+problemUrl);
 	    try{	//if the problem has been assigned, (ps: 分配 button has disappeared,and next page is decide to solve problem or reject)
     		if(null!=assignUser&&!"".equals(assignUser)&&assignUser.matches(regex)){
-    			WebDriverUtils.setImplicitlyWaitSeconds(ConstantValue.TIMEOUT_SECONDS/2);	//set outTime
     			driver.findElement(By.id("assign_issue")).click();
+	    	    Thread.sleep(1000);
 		    	driver.findElement(By.id("comment")).clear();
 		    	driver.findElement(By.id("comment")).sendKeys(assignComment);
 		    	try{
 		    		new Select(driver.findElement(By.id("assignee"))).selectByVisibleText(assignUser);
+		    	    //System.out.println("firstly select person :----->"+assignUser);
+
 		    	}catch(Exception e){
 			    	System.out.println("please correct the assignUser, cant not find the assignUser" +assignUser);
 			    	throw new Exception("please correct the assignUser");
 		    	}	
 		    	driver.findElement(By.id("分配")).click();	
+	    	    System.out.println(" assigne to :----->"+assignUser);
 			    return;
     		}
     	}catch(Exception e){
@@ -110,7 +112,9 @@ public class CommitDataSetToUrlModel {
     		return;
     	}
     	WebDriverUtils.setImplicitlyWaitSeconds(ConstantValue.TIMEOUT_SECONDS);	//set outTime
-
+	    if(null==result||"".equals(result)){
+	    	result="解决(修复成功)";
+	    }	
 	    //先分配给自己 再解决缺陷
 	    try{
 	    	driver.findElement(By.id("action_id_721")).click();
