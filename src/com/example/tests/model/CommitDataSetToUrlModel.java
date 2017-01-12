@@ -100,6 +100,7 @@ public class CommitDataSetToUrlModel {
 		    		new Select(driver.findElement(By.id("assignee"))).selectByVisibleText(assignUser);
 		    	    //System.out.println("firstly select person :----->"+assignUser);
 
+		    		
 		    	}catch(Exception e){
 			    	System.out.println("please correct the assignUser, cant not find the assignUser" +assignUser);
 			    	e.printStackTrace();
